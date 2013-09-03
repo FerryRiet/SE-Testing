@@ -127,9 +127,7 @@ lengths :: [[a]] -> [Int]
 lengths [] = error "empty list"
 lengths x  = map length x
 
+-- 1.21
 sumlengths :: [[a]] -> Int
 sumlengths x = sum (lengths x)
 	
-
-
-
