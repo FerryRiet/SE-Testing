@@ -2,6 +2,7 @@
 
 ldp :: Integer -> Integer
 ldp n = ldpf primes1 n
+-- minus n does not compile to few arguments
 
 ldpf :: [Integer] -> Integer -> Integer
 ldpf (p:ps) n | rem n p == 0 = p
