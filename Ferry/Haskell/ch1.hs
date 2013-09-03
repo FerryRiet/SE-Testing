@@ -111,13 +111,25 @@ subString x (y:ys) | prefix x (y:ys) = True
 				   | otherwise = subString x ys
 
 
+factors :: Integer -> [Integer]
+factors n | n < 1 = error "argument not positive"
+		  | n == 1 = []
+		  | otherwise = p : factors (div n p) where p = ld n
 
 
+mymap :: (a -> b) -> [a] -> [b]
+mymap f [] = []
+mymap f (x:xs) = (f x) : (mymap f xs)
 
+-- 1.20
 
+lengths :: [[a]] -> [Int]
+lengths [] = error "empty list"
+lengths x  = map length x
 
-
-
+sumlengths :: [[a]] -> Int
+sumlengths x = sum (lengths x)
+	
 
 
 
