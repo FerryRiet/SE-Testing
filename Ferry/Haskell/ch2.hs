@@ -1,9 +1,15 @@
 -- CH2 (TAMO)
 
+module TAMO
+where
+
 infix 1 ==>
 
 (==>) :: Bool -> Bool -> Bool
 True ==> x = x
+
+
+
 False ==> x = True
 
 infix 1 <=>
@@ -28,3 +34,4 @@ p = True
 q = False
 formula1 = (not p) && (p ==> q) <=> not (q && (not p))
 
+formula2 p q = ((not p) && (p ==> q) <=> not (q && (not p)))
