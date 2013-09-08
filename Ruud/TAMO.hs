@@ -1,8 +1,10 @@
+{-# LANGUAGE FlexibleInstances #-}
 module TAMO 
 
 where
 -- use hugs -98 
 -- or use ghci -XFlexibleInstances
+
 
 infix 1 ==>
 

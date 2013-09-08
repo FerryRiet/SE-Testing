@@ -1,17 +1,4 @@
--- Exercise 1.4
---
--- Question:	Suppose in the definition of ldf we replace the condition k^2 > n
--- 				by k^2 >= n, where >= expresses ‘greater than or equal’. Would that make any
--- 				difference to the meaning of the program? Why (not)?
---
--- Answer:		TODO
 
--- Exercise 1.6
--- 
--- Question:	Can you gather from the definition of divides what the type declaration
---				for rem would look like?
---
--- Answer:		TODO
 
 
 -- Code from other exercises below:
