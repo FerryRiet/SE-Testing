@@ -24,6 +24,9 @@ equiv f g = tautology (Equiv f g)
 cnf :: Form -> Form
 cnf (Prop x) = Prop x
 cnf (Cnj fs) = Cnj (map cnf fs)
-cnf (Dsj fs) = Dist (map cnf fs)
+cnf (Dsj fs) = dist (map cnf fs)
 
-
+dist :: (Form,Form) -> Form
+dist Cnj f j   = j
+disk f Cnj j  = f
+disk f j       = Dsj f j
