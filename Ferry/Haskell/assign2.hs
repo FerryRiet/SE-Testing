@@ -1,6 +1,4 @@
-
 import Week2
-
 
 contradiction :: Form -> Bool
 contradiction f = not (any (\ v -> eval v f) (allVals f))
@@ -18,13 +16,13 @@ entails f g = tautology (Impl f g)
 equiv :: Form -> Form -> Bool
 equiv f g = tautology (Equiv f g)
 
---cnf :: Form -> Form
---cnf = nnf . arrowfree 
-
 cnf :: Form -> Form
-cnf (Prop x) = Prop x
-cnf (Cnj fs) = Cnj (map cnf fs)
-cnf (Dsj fs) = dist (map cnf fs)
+cnf = cnf' . nnf . arrowfree 
+
+cnf' :: Form -> Form
+cnf' (Prop x) = Prop x
+cnf' (Cnj fs) = Cnj (map cnf' fs)
+cnf' (Dsj fs) = dist (map cnf' fs)
 
 
 dist' :: Form -> Form ->Form
