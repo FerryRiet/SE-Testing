@@ -17,10 +17,11 @@ equiv :: Form -> Form -> Bool
 equiv f g = tautology (Equiv f g)
 
 cnf :: Form -> Form
-cnf = nnf . arrowfree 
+cnf = cnf' . nnf . arrowfree 
 
 cnf' :: Form -> Form
 cnf' (Prop x) = Prop x
+cnf' (Neg  x) = Neg x
 cnf' (Cnj fs) = Cnj (map cnf' fs)
 cnf' (Dsj fs) = dist (map cnf' fs)
 
