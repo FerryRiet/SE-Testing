@@ -79,8 +79,8 @@ data Form = Prop Name
 instance Show Form where 
   show (Prop x)   = show x
   show (Neg f)    = '-' : show f 
-  show (Cnj fs)     = "*(" ++ showLst fs ++ ")"
-  show (Dsj fs)     = "+(" ++ showLst fs ++ ")"
+  show (Cnj fs)     = "&&(" ++ showLst fs ++ ")"
+  show (Dsj fs)     = "||(" ++ showLst fs ++ ")"
   show (Impl f1 f2)  = "(" ++ show f1 ++ "==>" 
                            ++ show f2 ++ ")"
   show (Equiv f1 f2)  = "(" ++ show f1 ++ "<=>" 
