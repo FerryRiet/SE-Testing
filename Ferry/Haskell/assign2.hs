@@ -26,7 +26,17 @@ cnf (Prop x) = Prop x
 cnf (Cnj fs) = Cnj (map cnf fs)
 cnf (Dsj fs) = dist (map cnf fs)
 
-dist :: (Form,Form) -> Form
-dist Cnj f j   = j
-disk f Cnj j  = f
-disk f j       = Dsj f j
+
+dist' :: Form -> Form ->Form
+dist' (Dsj f) p = p
+dist' f (Dsj p) = f
+dist' f p = Dsj [f, p]  
+
+dist :: [Form] -> Form
+dist [f] = f
+dist (f:fs) = dist' f (dist fs)
+
+--nodist :: (Form,Form) -> Form
+--nodist Cnj f j   = j
+--nodisk f Cnj j  = f
+--nodisk f j       = Dsj f j
