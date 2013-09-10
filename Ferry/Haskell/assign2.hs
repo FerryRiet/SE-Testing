@@ -26,13 +26,17 @@ cnf' (Cnj fs) = Cnj (map cnf' fs)
 cnf' (Dsj fs) = dist (map cnf' fs)
 
 dist' :: Form -> Form ->Form
-dist' (Dsj f) p = Cnj (map (\x -> dist' p x) f)
-dist' f (Dsj p) = Cnj (map (\x -> dist' x f) p)
+dist' (Cnj f) p = Cnj (map (\x -> dist' x p) f)
+dist' f (Cnj p) = Cnj (map (\x -> dist' f x) p)
 dist' f p = Dsj [f, p]  
 
 dist :: [Form] -> Form
 dist [f] = f
 dist (f:fs) = dist' f (dist fs)
+
+testCNF :: Form -> Bool
+testCNF f = equiv f g
+		    where g = cnf f
 
 --nodist :: (Form,Form) -> Form
 --nodist Cnj f j   = j
