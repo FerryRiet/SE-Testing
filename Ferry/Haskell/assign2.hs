@@ -3,7 +3,6 @@ import Week2
 contradiction :: Form -> Bool
 contradiction f = not (any (\ v -> eval v f) (allVals f))
 
-
 tautology :: Form -> Bool
 tautology f = all (\ v -> eval v f) (allVals f)
 
@@ -12,16 +11,17 @@ entails :: Form -> Form -> Bool
 entails f g = tautology (Impl f g)	
 
 -- logical equivalence
-
 equiv :: Form -> Form -> Bool
 equiv f g = tautology (Equiv f g)
 
+
+--------------------------
 cnf :: Form -> Form
-cnf = cnf' . nnf . arrowfree 
+cnf = cnf' . nnf . arrowfree -- Don't listen to Jimmy 
 
 cnf' :: Form -> Form
 cnf' (Prop x) = Prop x
-cnf' (Neg  x) = Neg x
+cnf' (Neg  x) = Neg x        -- Do listem to Jimmy
 cnf' (Cnj fs) = Cnj (map cnf' fs)
 cnf' (Dsj fs) = dist (map cnf' fs)
 

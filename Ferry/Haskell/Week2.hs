@@ -102,6 +102,8 @@ form3 = Impl (Cnj [Impl p q, Impl q r]) (Impl p r)
 form4 = Cnj [(Neg p),p]
 form5 = Dsj [(Neg p),p]
 form6 = Cnj [q,p]
+form7 = Cnj [q,r,p]
+form8 = Dsj [q,r,p]
 
 
 propNames :: Form -> [Name]
