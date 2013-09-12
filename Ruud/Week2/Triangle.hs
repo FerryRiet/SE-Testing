@@ -22,8 +22,9 @@ triangle' [a,b,c]
 	| twoAreEqual = Isosceles 
 	| isPythagorean = Rectangular
 	| otherwise = Other
-	where 
-		isInvalid = a + b <= c 
+	where
+		positiveInts = all (>0) [a,b,c]
+		isInvalid = positiveInts && a + b <= c 
 		allAreEqual = length (nub([a, b, c])) == 1
 		twoAreEqual = length (nub([a, b, c])) == 2
 		isPythagorean = a^2 + b^2 == c^2
@@ -49,6 +50,7 @@ triangle' [a,b,c]
 -- *Week2> triangle 43 19 27
 -- Other
 
+-- Created functions to test... not sure how to use them
 testNoTriangle 	:: [Integer] -> Bool
 testNoTriangle 	(a:b:c:xs) = triangle a b c == NoTriangle
 
