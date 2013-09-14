@@ -1,9 +1,9 @@
-module Sol2  
+module Week1.Sol2  
 
 where 
 
-import GS
-import TAMO
+import Week1.GS
+import Week1.TAMO
 
 -- Exercise 2.2 (+2.4) (+2.9)
 --

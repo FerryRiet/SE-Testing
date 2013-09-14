@@ -1,4 +1,4 @@
-module GS 
+module Week1.GS 
 
 where 
 
