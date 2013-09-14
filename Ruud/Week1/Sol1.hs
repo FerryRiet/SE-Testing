@@ -1,8 +1,8 @@
-module Sol1  
+module Week1.Sol1  
 
 where 
 
-import GS
+import Week1.GS
 
 -- Exercise 1.4
 --
@@ -62,17 +62,16 @@ mnmString (x:xs) = min x (mnmString xs)
 subString :: String -> String -> Bool
 subString [] ys = True
 subString (x:xs) [] = False
-subString (x:xs) (y:ys) = (x==y) && (prefix xs ys)
+subString (x:xs) (y:ys) = (x==y) && (prefix' xs ys)
 						|| (subString (x:xs) ys) 
 
-prefix :: String -> String -> Bool
-prefix [] ys = True
-prefix (x:xs) [] = False
-prefix (x:xs) (y:ys) = (x==y) && prefix xs ys
+prefix' :: String -> String -> Bool
+prefix' [] ys = True
+prefix' (x:xs) [] = False
+prefix' (x:xs) (y:ys) = (x==y) && prefix' xs ys
 
 -- Exercise 1.20
 lengths :: [[a]] -> [Int]
-lengths [] = 0
 lengths = map length
 
 -- Exercise 1.21

@@ -1,5 +1,5 @@
 {-# LANGUAGE FlexibleInstances #-}
-module TAMO 
+module Week1.TAMO 
 
 where
 -- use hugs -98 

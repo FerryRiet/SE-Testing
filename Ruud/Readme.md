@@ -1,6 +1,11 @@
 Assignments:
 ========
 
-* Sol1
+Week 1 ( :l Week1 )
+> * Sol1
 * Sol2
-* Week 2
+
+Week2 ( :l Week2 )
+> * Triangles ( run tests: allTriangleTests )
+* Propositional ( run tests: allPropositionalTests )
+* CNF ( run tests: todo )
