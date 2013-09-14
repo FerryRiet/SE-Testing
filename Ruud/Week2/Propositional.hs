@@ -82,6 +82,18 @@ satis1 = p
 satis2 = Neg p
 satis3 = Impl p q
 
+-- Source: http://homepages.cwi.nl/~jve/books/pdfs/lai.pdf (p 98.)
+entails1a = Impl p (Impl q r)
+entails1b = Impl (Impl p q) (Impl p r)
+entails2a = Cnj [p, Impl p q]
+entails2b = q
+entails3a = Cnj [Impl p q, Neg q]
+entails3b = Neg p
+entails4a = Cnj [Impl p q, Impl q r]
+entails4b = Impl p r
+entails5a = Cnj [Dsj [p, q], Impl p r]
+entails5b = Dsj [r, q]
+
 -- Source: http://homepages.cwi.nl/~jve/books/pdfs/lai.pdf (p 99.)
 equiv1a = p
 equiv1b = Neg $ Neg p
@@ -151,16 +163,23 @@ tautology f = all (\ v -> eval v f) (allVals f)
 -- logical entailment
 entails :: Form -> Form -> Bool
 entails f1 f2 = all (\ x -> fst(x) == False || snd(x) == True)
-	(zip (truthTable f1) (truthTable f2))
+	(zip (truthTable f1 v) (truthTable f2 v))
+	where v = allVals(bf f1 f2)
 
 -- logical equivalence
 equiv :: Form -> Form -> Bool
 equiv f1 f2 = all (\ x -> fst(x) == snd(x)) 
-	(zip (truthTable f1) (truthTable f2))
+	(zip (truthTable f1 v) (truthTable f2 v))
+	where v = allVals(bf f1 f2)
 
-truthTable :: Form -> [Bool]
-truthTable f = map (\ v -> eval v f) (allVals f)
+truthTable :: Form -> [Valuation] -> [Bool]
+truthTable f v = map (\ v -> eval v f) v
 
+-- biggest form
+bf :: Form -> Form -> Form
+bf f1 f2
+	| (length(propNames(f1))) > (length(propNames(f2))) = f1
+	| otherwise = f2
 
 -- Joined variables
 allTaut = [taut1, taut2, taut3, taut4, taut5, taut6', taut7, taut7', taut8, taut9, taut10, taut11, taut12, taut13, taut14, taut15, taut16, taut17, taut18, taut19, taut20, taut21, taut22, taut23]
@@ -179,4 +198,24 @@ testS1 = all satisfiable [satis1, satis2, satis3]
 testS2 = not (any contradiction [satis1, satis2, satis3])
 testS3 = not (any tautology [satis1, satis2, satis3])
 
-allPropositionalTests = all (\x -> x) [testT1, testT2, testT3, testC1, testC2, testS1, testS2, testS3]
+
+-- Tests for entails
+testE1 = entails entails1a entails1b
+testE2 = entails entails2a entails2b
+testE3 = entails entails3a entails3b
+testE4 = entails entails4a entails4b
+testE5 = entails entails5a entails5b
+
+-- Tests for equiv
+testEq1 = equiv equiv1a equiv1b
+testEq2 = equiv equiv2a equiv2b
+testEq3 = equiv equiv3a equiv3b
+testEq4 = equiv equiv4a equiv4b
+
+-- A test for all tests
+allPropositionalTests = all (\x -> x) 
+	[testT1, testT2, testT3, 
+	testC1, testC2, 
+	testS1, testS2, testS3,
+	testE1, testE2, testE3, testE4, testE5,
+	testEq1, testEq2, testEq3, testEq4]
