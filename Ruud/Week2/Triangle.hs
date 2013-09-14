@@ -24,14 +24,15 @@ triangle' [a,b,c]
 	| otherwise = Other
 	where
 		positiveInts = all (>0) [a,b,c]
-		isInvalid = positiveInts && a + b <= c 
+		isInvalid = not positiveInts || (a + b <= c) 
 		allAreEqual = length (nub([a, b, c])) == 1
 		twoAreEqual = length (nub([a, b, c])) == 2
 		isPythagorean = a^2 + b^2 == c^2
- 
+
 -- triangle
--- Time spent += 1 hour
--- Tests done:
+-- Time spent += 1 à 2 hour(s)
+
+-- Manual Tests done:
 --
 -- *Week2> triangle 10 5 2
 -- NoTriangle
@@ -50,21 +51,29 @@ triangle' [a,b,c]
 -- *Week2> triangle 43 19 27
 -- Other
 
--- Created functions to test... not sure how to use them
-testNoTriangle 	:: [Integer] -> Bool
-testNoTriangle 	(a:b:c:xs) = triangle a b c == NoTriangle
+-- Multiple tests:
 
-testEquilateral :: [Integer] -> Bool
-testEquilateral	(a:b:c:xs) = triangle a b c == Equilateral
+-- Test invalid triangles
+noTriangles = [[x,y,z] | x <- [-10,0..100], y <- [10,20..200], z <- [10+x+y,20+x+y..100+x+y]]
+testNT = all (\(a:b:c:xs) -> triangle a b c == NoTriangle) noTriangles
 
-testIsosceles 	:: [Integer] -> Bool
-testIsosceles	(a:b:c:xs) = triangle a b c == Isosceles
+-- Test triangles having 2 same lengths
+equis  = [[x,y,z] | x <- [1..100], y <- [x], z <- [x]]
+equis' = [[x,y,z] | x <- [-100,-99..0], y <- [x], z <- [x]]
+testE = all (\(a:b:c:xs) -> triangle a b c == Equilateral) equis
+testE' = all (\(a:b:c:xs) -> triangle a b c == NoTriangle) equis'
 
-testRectangular :: [Integer] -> Bool
-testRectangular	(a:b:c:xs) = triangle a b c == Rectangular
+isos  = [[x,y,z] | x <- [20,21..100], y <- [x], z <- [x+y-10]]
+isos2 = [[x,y,z] | x <- [20,21..100], z <- [x], y <- [x+z-10]]
+testI = all (\(a:b:c:xs) -> triangle a b c == Isosceles) isos 
+testI2 = all (\(a:b:c:xs) -> triangle a b c == Isosceles) isos2
 
-testOther 		:: [Integer] -> Bool
-testOther		(a:b:c:xs) = triangle a b c == Other
+rects = [[x,y,z] | x <- [1..100], y <- [1..x], z <- [x..100], x^2+y^2==z^2]
+testR = all (\(a:b:c:xs) -> triangle a b c == Rectangular) rects
 
--- *Week2> length (filter (testEquilateral) (map (replicate 3) [-10..100]))
--- 100
+others = [[x,y,z] | x <- [1..100], y <- [1..x], z <- [x..100],
+	not (x == y || x == z), not (x^2+y^2==z^2), not (x+y<=z)]
+testO = all (\(a:b:c:xs) -> triangle a b c == Other) others
+
+-- run all tests
+allTriangleTests = all (\x -> x) [testNT, testE, testE', testI, testI2, testR, testO]
