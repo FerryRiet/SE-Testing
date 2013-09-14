@@ -20,9 +20,9 @@ q = Prop 2
 r = Prop 3
 
 -- form1 and form3 are commented because they are tautologies
--- form1 = Equiv (Impl p q) (Impl (Neg q) (Neg p))
+form1 = Equiv (Impl p q) (Impl (Neg q) (Neg p))
 form2 = Equiv (Impl p q) (Impl (Neg p) (Neg q))
--- form3 = Impl (Cnj [Impl p q, Impl q r]) (Impl p r)
+form3 = Impl (Cnj [Impl p q, Impl q r]) (Impl p r)
 
 -- Tautologies [list of function found at: http://www.millersville.edu/~bikenaga/math-proof/truth-tables/truth-tables.html]
 -- 1. The law of the excluded middle.
