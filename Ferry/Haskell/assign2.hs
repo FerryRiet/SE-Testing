@@ -1,19 +1,5 @@
 import Week2
-
-contradiction :: Form -> Bool
-contradiction f = not (any (\ v -> eval v f) (allVals f))
-
-tautology :: Form -> Bool
-tautology f = all (\ v -> eval v f) (allVals f)
-
--- logical entailment
-entails :: Form -> Form -> Bool
-entails f g = tautology (Impl f g)	
-
--- logical equivalence
-equiv :: Form -> Form -> Bool
-equiv f g = tautology (Equiv f g)
-
+import Logic
 
 --------------------------
 cnf :: Form -> Form
@@ -37,6 +23,10 @@ dist (f:fs) = dist' f (dist fs)
 testCNF :: Form -> Bool
 testCNF f = equiv f g
 		    where g = cnf f
+
+
+t1 = testCNF (Dsj [Dsj [p,q],q])
+
 
 --nodist :: (Form,Form) -> Form
 --nodist Cnj f j   = j
