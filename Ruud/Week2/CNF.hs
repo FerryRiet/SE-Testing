@@ -56,6 +56,9 @@ fullCnf = cnf . nnf . arrowfree
 testCnf :: Form -> Bool
 testCnf f = equiv f (fullCnf f)
 
+-- Time spent, about 2 hours.
+-- Tests results of CNF: 
+--
 -- *Week2> arrowfree form1
 -- +(*(+(-1 2) +(--2 -1)) *(-+(-1 2) -+(--2 -1)))
 -- *Week2> equiv (form1) (arrowfree form1)
@@ -69,6 +72,6 @@ testCnf f = equiv f (fullCnf f)
 -- *Week2> equiv form1 (cnf . nnf . arrowfree $ form1)
 -- True
 
+-- Run tests on predefined (and used) forms
 testCNF1 = all testCnf [form1, form2, form3]
 testCNF2 = all testCnf (allTaut ++ allCont ++ allSatis)
-testCNF3 = all testCnf [form1, form2, form3]
