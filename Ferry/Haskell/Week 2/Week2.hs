@@ -77,10 +77,10 @@ data Form = Prop Name
           deriving Eq
 
 instance Show Form where 
-  show (Prop x)   = show x
-  show (Neg f)    = '-' : show f 
-  show (Cnj fs)     = "&&(" ++ showLst fs ++ ")"
-  show (Dsj fs)     = "||(" ++ showLst fs ++ ")"
+  show (Prop x)   = [(chr (111 + x))]
+  show (Neg f)    = "Neg " ++ show f 
+  show (Cnj fs)     = "Cnj [" ++ showLst fs ++ "]"
+  show (Dsj fs)     = "Dsj [" ++ showLst fs ++ "]"
   show (Impl f1 f2)  = "(" ++ show f1 ++ "==>" 
                            ++ show f2 ++ ")"
   show (Equiv f1 f2)  = "(" ++ show f1 ++ "<=>" 
@@ -88,7 +88,7 @@ instance Show Form where
 
 showLst,showRest :: [Form] -> String
 showLst [] = ""
-showLst (f:fs) = show f ++ showRest fs
+showLst (f:fs) = show f ++ "," ++ showRest fs
 showRest [] = ""
 showRest (f:fs) = ' ': show f ++ showRest fs
 
