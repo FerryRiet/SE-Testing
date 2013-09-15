@@ -19,7 +19,7 @@ cnf' (Dsj fs) = dist (map cnf' fs)
 -- precondition: input form is in cnf
 -- postcondition: returns form in cnf with the laws of distribution applied
 dist' :: Form -> Form ->Form
-dist' (Cnj f) p = Cnj (map (\x -> dist' x p) f)
+dist' (Cnj f) p = Cnj (map (\x -> dist' x p) f)    
 dist' f (Cnj p) = Cnj (map (\x -> dist' f x) p)
 dist' f p = Dsj [f, p]  
 
@@ -55,7 +55,8 @@ dc2 = dist' (Cnj [q, r]) p == Cnj [Dsj [q, p], Dsj [r, p]]
 {-
 Testing
 
-
+run test set composed of satisfiables, contradictions, and tautologies and test if there CNF is equivalent
+with the original function.
 
 -}
 
