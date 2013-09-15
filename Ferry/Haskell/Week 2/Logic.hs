@@ -55,7 +55,7 @@ testContradiction    = all contradiction [c1,c2,c3,c4]
 testNotContradiction = not $ any contradiction [t1,t2,t3,t4,t5,t6]
 
 testTautology     = all tautology [t1,t2,t3,t4,t5,t6]
-testNotTautology  = not $ all tautology ([c1,c2,c3,c4] ++ [s1])
+testNotTautology  = not $ any tautology ([c1,c2,c3,c4] ++ [s1])
 
 testEntails		  = all (\x -> x )  [e1,e2]
 testNotEntails	  = not $ any  (\x -> x )  [e3,e4]
@@ -72,6 +72,6 @@ testNotEntails	  = not $ any  (\x -> x )  [e3,e4]
 
 -- Step 2: Create known Contradictions an Tautology's and run both tests on both sets of functions
 
--- Step 3: Created two sets of entails (T,F) an run bots tests 
+-- Step 3: Created two sets of entails (T,F) and run bots tests 
 --
 
