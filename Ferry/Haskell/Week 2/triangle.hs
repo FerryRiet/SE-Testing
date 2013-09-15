@@ -24,12 +24,12 @@ isTriangle a b c  |  (a + b < c || b + c < a || c + a < b) = NoTriangle
 -- line needs 4 different sets.   
 -- 
 -- Second approach
--- Create full set and test output.
+-- Create full set and test output, and validate output.
 
-t1 = [ isTriangle a b c | a <- [2..5] , b <- [2..5] , c <- [2..5]]
-t2 = [ isTriangle a b c | a <- [2..5] , b <- [2..5] , c <- [2..5], length (nub [a,b,c]) == 1 ]
-t3 = [ isTriangle a b c | a <- [2..5] , b <- [2..5] , c <- [2..5], length (nub [a,b,c]) == 2 ]
-t4 = [ isTriangle a b c | a <- [2..5] , b <- [2..5] , c <- [2..5], a + b < c || b + c < a || c + a < b ]
+t1 = [ isTriangle a b c | a <- [2..5] , b <- [2..5] , c <- [2..5]] -- All
+t2 = [ isTriangle a b c | a <- [2..5] , b <- [2..5] , c <- [2..5], length (nub [a,b,c]) == 1 ] -- Only Equilatarel
+t3 = [ isTriangle a b c | a <- [2..5] , b <- [2..5] , c <- [2..5], length (nub [a,b,c]) == 2 ] -- Isocles and 3 times NoT
+t4 = [ isTriangle a b c | a <- [2..5] , b <- [2..5] , c <- [2..5], a + b < c || b + c < a || c + a < b ]  -- Rectangular
 
 -- Test NoTriangle 3 in set
 cnot = length (filter (== True) $ map (== NoTriangle ) t1)  == 3    -- 225,252,522
@@ -40,15 +40,14 @@ crct = length (filter (== True) $ map (== Rectangular ) t1) == length (permutati
 -- Test Equilateral 4 in set
 ceql = length (filter (== True) $ map (== Equilateral ) t1) == 4   -- 222,333,444,5555
 
--- Combinations twice  2 out 4 = 16 minus the Equil = 12, select 1 from selection and permutate 
+-- Combinations select 2 out 4 = 16 minus the Equil = 12, select 1 from selection and permutate 
 -- gives 72, remove doubles, and remove NoTriangles leaves 33 Isosceles triangles   
-ciso = length (filter (== True) $ map (== Isosceles ) t1)  ==  33  -- Combinations twice  2 out 4 = 16 minus the Rects ==12 
+ciso = length (filter (== True) $ map (== Isosceles ) t1)  ==  33  -- Combinations  
 
 -- The rest test
 coth = length (filter (== True) $ map (== Other ) t1)  == 18       -- rest
 
 -- Time spend:
-
 -- Writing first version took me +- 10 minutes. After that a modification and rearanging
 -- the guards took me an other 10 minutes.
 --
