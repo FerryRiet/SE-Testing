@@ -162,24 +162,11 @@ tautology f = all (\ v -> eval v f) (allVals f)
 
 -- logical entailment
 entails :: Form -> Form -> Bool
-entails f1 f2 = all (\ x -> fst(x) == False || snd(x) == True)
-	(zip (truthTable f1 v) (truthTable f2 v))
-	where v = allVals(bf f1 f2)
+entails f1 f2 = tautology (Impl f1 f2)
 
 -- logical equivalence
 equiv :: Form -> Form -> Bool
-equiv f1 f2 = all (\ x -> fst(x) == snd(x)) 
-	(zip (truthTable f1 v) (truthTable f2 v))
-	where v = allVals(bf f1 f2)
-
-truthTable :: Form -> [Valuation] -> [Bool]
-truthTable f v = map (\ v -> eval v f) v
-
--- biggest form
-bf :: Form -> Form -> Form
-bf f1 f2
-	| (length(propNames(f1))) > (length(propNames(f2))) = f1
-	| otherwise = f2
+equiv f1 f2 = entails f1 f2 && entails f2 f1
 
 -- Joined variables
 allTaut = [taut1, taut2, taut3, taut4, taut5, taut6', taut7, taut7', taut8, taut9, taut10, taut11, taut12, taut13, taut14, taut15, taut16, taut17, taut18, taut19, taut20, taut21, taut22, taut23]
