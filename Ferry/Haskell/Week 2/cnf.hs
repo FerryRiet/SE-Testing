@@ -1,3 +1,7 @@
+module cnf
+
+where
+
 import Week2
 import Logic
 
