@@ -3,6 +3,7 @@ module Cnf
 where 
 
 import Week2
+-- import Week3
 import Logic
 
 --------------------------
@@ -40,7 +41,7 @@ testCNF f = equiv f g
 		    where g = cnf f
 
 
-t1 = testCNF (Dsj [Dsj [p,q],q])
+cnft1 = testCNF (Dsj [Dsj [p,q],q])
 
 {-
 Coding the first version took +- 3 hours, id did not work at all 

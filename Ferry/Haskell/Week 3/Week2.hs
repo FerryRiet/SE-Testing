@@ -88,9 +88,9 @@ instance Show Form where
 
 showLst,showRest :: [Form] -> String
 showLst [] = ""
-showLst (f:fs) = show f ++ "," ++ showRest fs
+showLst (f:fs) = show f ++ showRest fs
 showRest [] = ""
-showRest (f:fs) = ' ': show f ++ showRest fs
+showRest (f:fs) = ',': show f  ++ showRest fs
 
 p = Prop 1
 q = Prop 2

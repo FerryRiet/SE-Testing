@@ -38,19 +38,20 @@ succeed :: b -> Parser a b
 succeed x xs = [(x,xs)]
 
 parseForm :: Parser Token Form 
-parseForm (TokenInt x: tokens) = [(Prop x,tokens)]
-parseForm (TokenNeg : tokens) =
-  [ (Neg f, rest) | (f,rest) <- parseForm tokens ]
-parseForm (TokenCnj : TokenOP : tokens) = 
-  [ (Cnj fs, rest) | (fs,rest) <- parseForms tokens ]
-parseForm (TokenDsj : TokenOP : tokens) = 
-  [ (Dsj fs, rest) | (fs,rest) <- parseForms tokens ]
+parseForm (TokenInt x: tokens)          = [(Prop x,tokens)]
+
+parseForm (TokenNeg : tokens)           = [ (Neg f, rest) | (f,rest) <- parseForm tokens ]
+
+parseForm (TokenCnj : TokenOP : tokens) = [ (Cnj fs, rest) | (fs,rest) <- parseForms tokens ]
+
+parseForm (TokenDsj : TokenOP : tokens) = [ (Dsj fs, rest) | (fs,rest) <- parseForms tokens ]
+
 parseForm (TokenOP : tokens) = 
-    [ (Impl f1 f2, rest) | (f1,ys) <- parseForm tokens,
-                           (f2,rest) <- parseImpl ys ]
-     ++
-    [ (Equiv f1 f2, rest) | (f1,ys) <- parseForm tokens,
-                            (f2,rest) <- parseEquiv ys ] 
+                                [ (Impl f1 f2, rest) | (f1,ys) <- parseForm tokens,
+                                                       (f2,rest) <- parseImpl ys ]
+                                 ++
+                                [ (Equiv f1 f2, rest) | (f1,ys) <- parseForm tokens,
+                                                        (f2,rest) <- parseEquiv ys ] 
 parseForm tokens = []
 
 parseForms :: Parser Token [Form] 
@@ -82,20 +83,20 @@ getRandomF = do d <- getRandomInt 4
                 getRandomForm d
             
 getRandomForm :: Int -> IO Form 
-getRandomForm 0 = do m <- getRandomInt 20
+getRandomForm 0 = do m <- getRandomInt 4
                      return (Prop (m+1))
 
 getRandomForm d = do n <- getRandomInt 3
                      case n of 
-                       0 -> do m <- getRandomInt 20
+                       0 -> do m <- getRandomInt 4
                                return (Prop (m+1))
                        1 -> do f <- getRandomForm (d-1)
                                return (Neg f) 
-                       2 -> do m  <- getRandomInt 5 
-                               fs <- getRandomForms (d-1) m
+                       2 -> do m  <- getRandomInt 2 
+                               fs <- getRandomForms (d-1) (m+2)
                                return (Cnj fs)
-                       3 -> do m  <- getRandomInt 5 
-                               fs <- getRandomForms (d-1) m
+                       3 -> do m  <- getRandomInt 2 
+                               fs <- getRandomForms (d-1) (m+2)
                                return (Dsj fs)
 
 getRandomFs :: Int ->  IO [Form]

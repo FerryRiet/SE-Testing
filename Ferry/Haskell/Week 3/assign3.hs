@@ -40,3 +40,7 @@ testRandomCNF :: IO Bool
 testRandomCNF = 
 	do f <- getRandomF
 	   return (equiv f (cnf f))
+
+testMilCNF= all (\x -> equiv x (cnf x)) [ unsafePerformIO getRandomF | x <- [1..1000]]
+
+tfs = testForms 100 (\x -> equiv (x) (cnf x)) 
