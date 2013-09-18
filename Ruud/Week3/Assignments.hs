@@ -11,8 +11,8 @@ import Techniques
 
 -- genIntList creates a list of zero to ten random Ints
 genIntList :: IO [Int]
-genIntList = do d <- getRandomInt 10 ;
-                getRandomInts 2
+genIntList = do d <- getRandomInt 5 ;
+                getRandomInts d
                    
 getRandomInts :: Int -> IO [Int]
 getRandomInts 0 = return []
