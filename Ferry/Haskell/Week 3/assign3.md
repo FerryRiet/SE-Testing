@@ -1,4 +1,4 @@
-''' Haskell
+``` Haskell
 import Week3
 import Techniques 
 import Data.List 
@@ -46,4 +46,4 @@ testMilCNF= all (\x -> equiv x (cnf x)) [ unsafePerformIO getRandomF | x <- [1..
 
 tfs = testForms 100 (\x -> equiv (x) (cnf x)) 
 
-'''
+```
