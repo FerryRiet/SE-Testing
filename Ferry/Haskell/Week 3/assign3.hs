@@ -26,12 +26,21 @@ genIntList'  n =  do c <- getRandomInt 10
 
 -- Time spend 10 min
 
+remFst :: Eq a =>  a -> [a] -> [a]
+remFst n [] = []
+remFst n (f:fs) 
+        |  n == f = fs
+        |  otherwise = [f] ++ (remFst n fs)   
+
 isPermutation :: Eq a => [a] -> [a] -> Bool
-isPermutation set1 set2  
-				| length set1 /= length set2 = False
---					| sort set1 == sort set2     = True
-				| otherwise    = any (\ x -> x == set2 ) permlist
-					             where permlist = permutations set1
+isPermutation [] [] = True
+
+isPermutation (f:fs) g  
+				| length (f:fs) /= length g = False
+				| otherwise    = isPermutation s1 s2
+					             where s1  = fs
+					                   s2  = remFst f g
+
 
 testIspermutation :: [Int] -> Bool
 testIspermutation fs = all ( \x -> isPermutation x fs) (permutations fs) 
