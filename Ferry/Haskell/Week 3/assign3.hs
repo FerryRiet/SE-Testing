@@ -24,7 +24,7 @@ genIntList'  n =  do c <- getRandomInt 10
 	3: nub of both sets are equal
 -}
 
--- Time spend 10 min
+-- Time spend 10 min and 10 min on rewrite
 
 remFst :: Eq a =>  a -> [a] -> [a]
 remFst n [] = []
@@ -44,6 +44,7 @@ isPermutation (f:fs) g
 
 testIspermutation :: [Int] -> Bool
 testIspermutation fs = all ( \x -> isPermutation x fs) (permutations fs) 
+
 
 testRandomCNF :: IO Bool
 testRandomCNF = 
