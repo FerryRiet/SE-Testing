@@ -9,38 +9,36 @@ import System.Random
 import Week3
 import Techniques
 
--- genIntList creates a list of zero to ten random Ints
+-- genIntList creates a list of 'n' Ints from zero to 'm'
 genIntList :: IO [Int]
-genIntList = do d <- getRandomInt 5 ;
-                getRandomInts d
+genIntList = do 
+        n <- getRandomInt 5
+        m <- getRandomInt 5
+        getRandomInts n m 
                    
-getRandomInts :: Int -> IO [Int]
-getRandomInts 0 = return []
-getRandomInts n = do
-        f <- getRandomInt 10
-        fs <- getRandomInts (n-1)
+-- getRandomInts creates a list of 'n' Ints from zero to 'm'
+getRandomInts :: Int -> Int -> IO [Int]
+getRandomInts 0 m = return []
+getRandomInts n m = do
+        f <- getRandomInt m
+        fs <- getRandomInts (n-1) m
         return (f:fs)
 
 -- a permutation is of the same length
--- a permutation contains more then one number
--- a permutation contains the same numbers 
--- in a permutation the numbers occur in differnt order
+-- a permutation contains the same numbers but may appear in different order, so the ordered lists of the items are the same
+-- the sum of a permutation is the same
 isPermutation :: Eq a => [a] -> [a] -> Bool
 isPermutation [] _              = False
-isPermutation [x] _             = False
 isPermutation _ []              = False
-isPermutation _ [y]             = False
-isPermutation (xs) (ys)         = 
-        if length xs == length ys && xs /= ys && compareLists xs ys
-        then True 
-        else False
+isPermutation (xs) (ys)         = compareLists xs ys
 
+-- keep removing items till there are none left
 compareLists :: Eq a => [a] -> [a] -> Bool
 compareLists [] []              = True
 compareLists [] _               = False
+compareLists _ []               = False
 compareLists (x:xs) (ys)        = compareLists xs (removeItem x ys) 
 
 removeItem :: Eq a => a -> [a] -> [a]
-removeItem _ []                 = []
 removeItem x (y:ys) | x == y    = ys
                     | otherwise = y : removeItem x ys
