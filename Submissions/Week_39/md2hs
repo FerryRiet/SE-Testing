@@ -1,0 +1,7 @@
+if [ $# == 0 ] 
+then
+    echo "Usage :  md2hs FileName.hs"
+    exit 1
+fi
+OUTNAME=`basename $1 .md`_.hs
+awk 'BEGIN { x = 0 } /^```/{x=!x;next}{if (x) print} ' $1 > $OUTNAME
