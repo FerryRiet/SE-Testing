@@ -1,4 +1,4 @@
-# Assignment Week 3
+## Assignment Week 3
 
 Creating a Int list with random integers. Time spend on this assignment 20, caused
 by the concept of unsafe IO. (e.g. monads)
@@ -45,7 +45,7 @@ isPermutation (f:fs) g
 
 ```
 
-Testable properties of the isPermutation function:
+### Testable properties of the isPermutation function:
 1: Length of input sets is equal
 2: Sorted input sets are equal
 3: nub of both sets are equal
@@ -58,20 +58,20 @@ testIspermutation :: [Int] -> Bool
 testIspermutation fs = all ( \x -> isPermutation x fs) (permutations fs) 
 ```
 
-# Testing the CNF function with the form generator
+## Testing the CNF function with the form generator
 
-## First test run:
+### First test run:
 
 Gave almost immidiatly the following error:
 
 `*** Exception: Cnf.hs:(34,1)-(35,31): Non-exhaustive patterns in function dist`
 
-## Reasons
+### Reasons
 
 1. The form generater created both disjunctions and conjunctions with an empty list.
 2. In the Dist algoritme is no case form Disjunctions with an empty list.
 
-## Solutions
+### Solutions
 
 1. Fix the generator to genarate exprsssions with a minimum of two arguments
 2. Fix the Dist function to accept empty lists 
@@ -96,18 +96,21 @@ tfs = testForms 1000 (\x -> equiv (x) (cnf x))
 
 ```
 
-# Finally
+### Final test run
 
 After the run of tfs we got
- `   ....`
- `   "pass on:Cnj [q,q,Neg q]"`
- `   "pass on:s"`
- `   "pass on:Dsj [Dsj [p,q,t],Dsj [t,q,q,s],t]"`
- `   "pass on:Cnj [q,Cnj [t,p]]"`
- `   "pass on:Dsj [Neg p,Cnj [q,s,s,p],Cnj [t,r,t],t]"`
- `   "pass on:Dsj [Neg p,Neg t,r,Neg s]"`
- `   "pass on:Cnj [Dsj [q,p],Dsj [q,t]]"`
- `   "pass on:Dsj [q,p,Neg p]"`
- `   "1000 tests passed"``
+     ....
+     "pass on:Cnj [q,q,Neg q]"
+     "pass on:s"
+     "pass on:Dsj [Dsj [p,q,t],Dsj [t,q,q,s],t]"
+     "pass on:Cnj [q,Cnj [t,p]]"
+     "pass on:Dsj [Neg p,Cnj [q,s,s,p],Cnj [t,r,t],t]"
+     "pass on:Dsj [Neg p,Neg t,r,Neg s]"
+     "pass on:Cnj [Dsj [q,p],Dsj [q,t]]"
+     "pass on:Dsj [q,p,Neg p]"
+     "1000 tests passed"
 
 
+## Final
+
+To extract the Haskell code from this document use the script called `md2hs` 

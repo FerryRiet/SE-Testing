@@ -1,8 +1,7 @@
 module FormGen
 
 where
-
---import Week2  
+  
 import Week3
 import Techniques 
 import Data.List 
