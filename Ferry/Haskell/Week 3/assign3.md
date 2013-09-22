@@ -62,29 +62,29 @@ testIspermutation fs = all ( \x -> isPermutation x fs) (permutations fs)
 
 ### First test run:
 
-Gave almost immidiatly the following error:
+Gave almost immediately the following error:
 
 `*** Exception: Cnf.hs:(34,1)-(35,31): Non-exhaustive patterns in function dist`
 
 ### Reasons
 
-1. The form generater created both disjunctions and conjunctions with an empty list.
-2. In the Dist algoritme is no case form Disjunctions with an empty list.
+1. The form generator created both disjunctions and conjunctions with an empty list.
+2. In the Dist algorithm is no case form Disjunctions with an empty list.
 
 ### Solutions
 
-1. Fix the generator to genarate exprsssions with a minimum of two arguments
+1. Fix the generator to generate expressions with a minimum of two arguments
 2. Fix the Dist function to accept empty lists 
 3. Modify CNF' not to call dist with an empty list
 
-I choose to fix the generator not to generate empty expressions, and modified 
+I choose to double fix the generator not to generate empty expressions, and modified 
 CNF' not to call Dist with an empty list.
 
-Added `cnf' (Dsj []) = Dsj []` alternative allowing empty conjunctions and returning them,
+Added `cnf' (Dsj []) = Dsj []` alternative allowing empty disjunctions and returning them,
 and added 2 to the random value of the generator.
 
-The reason for this modification is that whitin our definition of Form the constants of True
-and False (Dsj [] = false, Cnj [] = true)  are not defined. 
+The reason for the modification is that within our definition of Form the constants of True
+and False (Dsj [] = false, Cnj [] = true) are not defined and rewrite would be the best solution. 
 
 ``` Haskell
 testRandomCNF :: IO Bool
@@ -101,19 +101,23 @@ tfs = testForms 1000 (\x -> equiv (x) (cnf x))
 
 ### Final test run
 
-After the run of tfs we got
-     ....
-     "pass on:Cnj [q,q,Neg q]"
-     "pass on:s"
-     "pass on:Dsj [Dsj [p,q,t],Dsj [t,q,q,s],t]"
-     "pass on:Cnj [q,Cnj [t,p]]"
-     "pass on:Dsj [Neg p,Cnj [q,s,s,p],Cnj [t,r,t],t]"
-     "pass on:Dsj [Neg p,Neg t,r,Neg s]"
-     "pass on:Cnj [Dsj [q,p],Dsj [q,t]]"
-     "pass on:Dsj [q,p,Neg p]"
-     "1000 tests passed"
+After the run of tfs we got:
 
+         ....
+         "pass on:Cnj [q,q,Neg q]"
+         "pass on:s"
+         "pass on:Dsj [Dsj [p,q,t],Dsj [t,q,q,s],t]"
+         "pass on:Cnj [q,Cnj [t,p]]"
+         "pass on:Dsj [Neg p,Cnj [q,s,s,p],Cnj [t,r,t],t]"
+         "pass on:Dsj [Neg p,Neg t,r,Neg s]"
+         "pass on:Cnj [Dsj [q,p],Dsj [q,t]]"
+         "pass on:Dsj [q,p,Neg p]"
+         "1000 tests passed"
+
+
+*(note: the output of Show Form is adapted to input syntax)*
 
 ## Final
 
-To extract the Haskell code from this document use the script called `md2hs` 
+To extract the Haskell code from this document use the script called `md2hs` , the 
+readeble form of this file is rendered by the github "md" engine.
