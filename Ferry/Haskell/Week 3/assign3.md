@@ -44,6 +44,8 @@ isPermutation (f:fs) g
 
 
 ```
+*(Knowing the environment is a plus Haskell lists have a delete in Eq)*
+
 
 ### Testable properties of the isPermutation function:
 1: Length of input sets is equal
@@ -84,7 +86,8 @@ Added `cnf' (Dsj []) = Dsj []` alternative allowing empty disjunctions and retur
 and added 2 to the random value of the generator.
 
 The reason for the modification is that within our definition of Form the constants of True
-and False (Dsj [] = false, Cnj [] = true) are not defined and rewrite would be the best solution. 
+and False (Dsj [] = false, Cnj [] = true) are not defined, and a rewrite of these empty operators 
+to there constant equivalent is not possible but would be the best solution. 
 
 ``` Haskell
 testRandomCNF :: IO Bool
@@ -120,4 +123,4 @@ After the run of tfs we got:
 ## Final
 
 To extract the Haskell code from this document use the script called `md2hs` , the 
-readeble form of this file is rendered by the github "md" engine.
+readable form of this file is rendered by the github "md" engine.

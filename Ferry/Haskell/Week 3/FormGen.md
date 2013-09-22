@@ -3,7 +3,6 @@
 Implementing a random Formula generator based on the definition in the file *Week3.hs*.
 
 ``` Haskell
-
 module FormGen
 
 where
@@ -100,7 +99,9 @@ getRandomFormulas d n = do
 
 ```
 
-### Running simple tests generating and manually checking output
+### Running simple tests generating and manually checking output.
+
+Generating formulas of different depth an lists of 1..3.
 
 ``` Haskell
 

@@ -1,7 +1,8 @@
 if [ $# == 0 ] 
 then
-    echo "Usage :  md2hs FileName.hs"
+    echo "Usage: md2hs FileName.hs"
     exit 1
 fi
 OUTNAME=`basename $1 .md`_.hs
-awk 'BEGIN { x = 0 } /^```/{x=!x;next}{if (x) print} ' $1 > $OUTNAME
+awk 'BEGIN { x = 0 }  /^```$/{if(x)x=0;next} 
+                      /^``` Haskell/{x=!x;next}{if(x)print}' $1 > $OUTNAME
