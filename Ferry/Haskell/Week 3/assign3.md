@@ -24,7 +24,7 @@ genIntList'  n =  do c <- getRandomInt 10
 
 The implementation of the function isPermutation. This implementation 
 removes element by element if they are the same in both sets, and if at the end there are 
-only two empty sets left then an only then the set2 was a permutation od set1 
+only two empty sets left then and only then the set2 was a permutation od set1 
 
 ``` Haskell
 remFst :: Eq a =>  a -> [a] -> [a]
@@ -58,15 +58,17 @@ testIspermutation :: [Int] -> Bool
 testIspermutation fs = all ( \x -> isPermutation x fs) (permutations fs) 
 ```
 
-Testing the CNF function with the form generator
+# Testing the CNF function with the form generator
 
 ## First test run:
 
+Gave almost immidiatly the following error:
+
 `*** Exception: Cnf.hs:(34,1)-(35,31): Non-exhaustive patterns in function dist`
 
-## Reason
+## Reasons
 
-1. The form generatr created both disjunctions and conjunctions with ean empty list.
+1. The form generater created both disjunctions and conjunctions with an empty list.
 2. In the Dist algoritme is no case form Disjunctions with an empty list.
 
 ## Solutions
@@ -97,15 +99,15 @@ tfs = testForms 1000 (\x -> equiv (x) (cnf x))
 # Finally
 
 After the run of tfs we got
-
-`"pass on:Cnj [q,q,Neg q]"
-"pass on:s"
-"pass on:Dsj [Dsj [p,q,t],Dsj [t,q,q,s],t]"
-"pass on:Cnj [q,Cnj [t,p]]"
-"pass on:Dsj [Neg p,Cnj [q,s,s,p],Cnj [t,r,t],t]"
-"pass on:Dsj [Neg p,Neg t,r,Neg s]"
-"pass on:Cnj [Dsj [q,p],Dsj [q,t]]"
-"pass on:Dsj [q,p,Neg p]"
-"1000 tests passed"`
+    ....
+    "pass on:Cnj [q,q,Neg q]"
+    "pass on:s"
+    "pass on:Dsj [Dsj [p,q,t],Dsj [t,q,q,s],t]"
+    "pass on:Cnj [q,Cnj [t,p]]"
+    "pass on:Dsj [Neg p,Cnj [q,s,s,p],Cnj [t,r,t],t]"
+    "pass on:Dsj [Neg p,Neg t,r,Neg s]"
+    "pass on:Cnj [Dsj [q,p],Dsj [q,t]]"
+    "pass on:Dsj [q,p,Neg p]"
+    "1000 tests passed"`
 
 

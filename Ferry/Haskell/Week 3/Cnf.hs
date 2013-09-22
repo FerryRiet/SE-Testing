@@ -18,7 +18,8 @@ cnf = cnf' . nnf . arrowfree -- Don't listen to Jimmy
 cnf' :: Form -> Form
 cnf' (Prop x) = Prop x
 cnf' (Neg  x) = Neg x        -- Do listen to Jimmy
-cnf' (Cnj fs) = Cnj (map cnf' fs)  
+cnf' (Cnj fs) = Cnj (map cnf' fs) 
+cnf' (Dsj []) = Dsj []
 cnf' (Dsj fs) = dist (map cnf' fs)
 
 -- precondition: input form is in cnf
