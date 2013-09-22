@@ -78,10 +78,13 @@ Gave almost immidiatly the following error:
 3. Modify CNF' not to call dist with an empty list
 
 I choose to fix the generator not to generate empty expressions, and modified 
-CNF' not to call Dist with an empty list
+CNF' not to call Dist with an empty list.
 
-Added `cnf' (Dsj []) = Dsj []` alternative and added 2 to the random value of the generator.
+Added `cnf' (Dsj []) = Dsj []` alternative allowing empty conjunctions and returning them,
+and added 2 to the random value of the generator.
 
+The reason for this modification is that whitin our definition of Form the constants of True
+and False (Dsj [] = false, Cnj [] = true)  are not defined. 
 
 ``` Haskell
 testRandomCNF :: IO Bool

@@ -13,6 +13,18 @@ getRandomName x = do
                      nn <- getRandomInt x 
                      return ([chr (97 + nn)])
 
+{-
+
+From the definition
+
+type Name = String
+data Term = V Name 
+          | F Name [Term] 
+          deriving (Eq,Ord)
+
+Add an f in front of name for readability          
+-}
+
 getRandomTerm :: Int -> IO Term 
 getRandomTerm 0 = do n <- getRandomName 3
                      return (V n)
@@ -22,7 +34,7 @@ getRandomTerm x = do n <- getRandomInt 1
                                    return (V n) 
                            1 -> do n <- getRandomName 3 
                                    ts <- (getRandomTerms 3 (x-1))
-                                   return (F ("f" ++ n) ts) 
+                                   return (F ("f" ++ n) (nub ts)) 
 
 getRandomTerms :: Int -> Int -> IO [Term]
 getRandomTerms _ 0 = return []
@@ -31,10 +43,14 @@ getRandomTerms d n = do
                         fs <- getRandomTerms (d-1) (n-1) 
                         return (f:fs)
 
+{- 
+On Atoms just for readability a "P" in front
+-}
+
 getRandomFormula :: Int -> IO Formula 
 getRandomFormula 0 = do m <- getRandomName 3
                         ts <- getRandomTerms 3 3 
-                        return (Atom ("P" ++ m) ts)
+                        return (Atom ("P" ++ m) (nub ts))
 
 getRandomFormula d = do n <- getRandomInt 8
                         case n of 
@@ -46,10 +62,10 @@ getRandomFormula d = do n <- getRandomInt 8
                                      return (Neg f) 
                              2 -> do m  <- getRandomInt 5 
                                      fs <- getRandomFormulas (d-1) m
-                                     return (Conj fs)
+                                     return (Conj (nub fs))
                              3 -> do m  <- getRandomInt 5 
                                      fs <- getRandomFormulas (d-1) m
-                                     return (Disj fs)
+                                     return (Disj (nub fs))
                              4 -> do f <- getRandomFormula (d-1)
                                      g <- getRandomFormula (d-1)
                                      return (Impl f g) 
@@ -72,4 +88,5 @@ getRandomFormulas d n = do
                         f <- getRandomFormula d
                         fs <- getRandomFormulas d (n-1) 
                         return (f:fs)
+
 
