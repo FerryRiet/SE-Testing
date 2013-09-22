@@ -2,6 +2,8 @@
 
 Implementing a random Formula generator based on the definition in the file *Week3.hs*.
 
+Time spend 3.5 hours due to a small war between me, spaces, tabs and Haskell 
+
 ``` Haskell
 module FormGen
 
