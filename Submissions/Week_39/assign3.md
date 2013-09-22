@@ -1,6 +1,6 @@
 ## Assignment Week 3
 
-Creating a Int list with random integers. Time spend on this assignment 20, caused
+Creating a Int list with random integers. Time spend on this assignment 20 minutes, caused
 by the concept of unsafe IO. (e.g. monads)
 
 ``` Haskell
@@ -26,6 +26,7 @@ The implementation of the function isPermutation. This implementation
 removes element by element if they are the same in both sets, and if at the end there are 
 only two empty sets left then and only then the set2 was a permutation od set1 
 
+*Time spend 30 minutes*
 ``` Haskell
 remFst :: Eq a =>  a -> [a] -> [a]
 remFst n [] = []
@@ -88,6 +89,8 @@ and added 2 to the random value of the generator.
 The reason for the modification is that within our definition of Form the constants of True
 and False (Dsj [] = false, Cnj [] = true) are not defined, and a rewrite of these empty operators 
 to there constant equivalent is not possible but would be the best solution. 
+
+*Times spend to fix 45 minutes*
 
 ``` Haskell
 testRandomCNF :: IO Bool
