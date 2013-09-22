@@ -98,8 +98,7 @@ tfs = testForms 1000 (\x -> equiv (x) (cnf x))
 
 After the run of tfs we got
 
-`
-"pass on:Cnj [q,q,Neg q]"
+`"pass on:Cnj [q,q,Neg q]"
 "pass on:s"
 "pass on:Dsj [Dsj [p,q,t],Dsj [t,q,q,s],t]"
 "pass on:Cnj [q,Cnj [t,p]]"
@@ -107,8 +106,6 @@ After the run of tfs we got
 "pass on:Dsj [Neg p,Neg t,r,Neg s]"
 "pass on:Cnj [Dsj [q,p],Dsj [q,t]]"
 "pass on:Dsj [q,p,Neg p]"
-"1000 tests passed"
-
-`
+"1000 tests passed"`
 
 
