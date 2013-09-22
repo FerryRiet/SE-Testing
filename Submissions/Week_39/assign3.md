@@ -27,26 +27,17 @@ removes element by element if they are the same in both sets, and if at the end 
 only two empty sets left then and only then the set2 was a permutation od set1 
 
 *Time spend 30 minutes*
-``` Haskell
-remFst :: Eq a =>  a -> [a] -> [a]
-remFst n [] = []
-remFst n (f:fs) 
-        |  n == f = fs
-        |  otherwise = [f] ++ (remFst n fs)   
 
+``` Haskell
 isPermutation :: Eq a => [a] -> [a] -> Bool
 isPermutation [] [] = True
-
-isPermutation (f:fs) g  
-                                | length (f:fs) /= length g = False
-                                | otherwise    = isPermutation s1 s2
-                                                     where s1  = fs
-                                                           s2  = remFst f g
-
-
+isPermutation [] _ = False
+isPermutation _ [] = False
+isPermutation (f:fs) (g:gs)  
+        | f == g = isPermutation fs gs
+        | otherwise = isPermutation fs gs'
+                where gs' = (delete f (g:gs))
 ```
-*(Knowing the environment is a plus Haskell lists have a delete in Eq)*
-
 
 ### Testable properties of the isPermutation function:
 1: Length of input sets is equal
