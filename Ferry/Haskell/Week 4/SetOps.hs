@@ -52,5 +52,5 @@ dif2 = testSets 1000 (\x -> (Set []) == (setDif x x))
 int1 = testSets 1000 (\x -> x == (setInt (insertSet 99 x) x))
 int2 = testSets 1000 (\x -> x == (setInt x (insertSet 99 x)))
 
-
+main = print ("Hello world\n")
 
