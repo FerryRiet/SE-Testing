@@ -41,6 +41,15 @@ rs = do
 
 rs' :: Int -> IO (Set Int) 
 rs' x = do 
-            d <- genIntList' x
-            return (Set (sort (nub d)))
+          d <- genIntList' x
+          return (Set (sort (nub d)))
+
+     
+rss :: Int -> IO [Set Int]
+rss 0 = return ([])  
+rss n = do 
+         f <- rs 
+         fs <- rss (n-1) 
+         return (f:fs)
+
 
