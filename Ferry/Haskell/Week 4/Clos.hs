@@ -74,10 +74,19 @@ testSetsTr n prop = do
   fs1 <- getRandomRels n
   testTr n prop fs1 
 
-cl1 = testSetsTr 10 (\x  -> intersect x (trClos x) == x)
-cl2 = testSetsTr 10 (\x  -> transR (trClos x))
-cl3 = testSetsTr 10 (\x  -> isMinimal (trClos x))
+cl1 = testSetsTr 100 (\x   -> intersect x (trClos x) == x)
+cl2 = testSetsTr 100 (\x   -> transR (trClos x))
+cl3 = testSetsTr 100 (\is  -> 
+                          not (
+                              any ( \q -> transR q && (intersect is q == is) ) 
+                                   [ z  | z <- [ delete (x,y) (trClos is) | (x,y) <- trClos is ]] 
+                              )
+                     ) 
+
+
  
+--cl3 = testSetsTr 10 (\x  -> isMinimal (trClos x))
+--[  z  | z <- [ delete (x,y) ppp | (x,y) <- ppp ] ] 
  
 
 
