@@ -26,11 +26,11 @@ randomSet' x = do
 
 -- Version 2 with external genIntList    
 genIntList :: IO [Int]
-genIntList = genIntList' 10 
+genIntList = genIntList' 8 
 
 genIntList'  :: Int -> IO [Int]
 genIntList'  0 =  return [] 
-genIntList'  n =  do c <- getRandomInt 30
+genIntList'  n =  do c <- getRandomInt 16
                      l <- genIntList' (n-1)
                      return (c:l)
 
@@ -51,5 +51,3 @@ rss n = do
          f <- rs 
          fs <- rss (n-1) 
          return (f:fs)
-
-
