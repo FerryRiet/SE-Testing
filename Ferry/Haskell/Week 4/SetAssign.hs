@@ -19,7 +19,7 @@ randomSet = do
 randomSet' :: Int -> IO (Set Int) 
 randomSet' 0 = return (Set [])
 randomSet' x = do
-                c <- getRandomInt 10
+                c <- getRandomInt 30
                 l <- randomSet' (x-1)
                 return (insertSet c l)
 

@@ -1,16 +1,25 @@
+module SetOps
+
+where 
+  
 import Data.List
 import SetOrd
 import SetAssign
 
---setUnion :: (Ord a) => Set a -> Set a -> Set a
---setUnion s1 s2 = s2
+
+-- Union Set already in SetOrd.hs
+
+uniSet :: (Ord a) => Set a -> Set a -> Set a 
+uniSet (Set [])     s2  =  s2
+uniSet (Set (x:xs)) s2  = 
+   insertSet x (uniSet (Set xs) s2)
 
 setInt :: (Ord a) => Set a -> Set a -> Set a
 setInt (Set [])  _ = Set []
 setInt _  (Set []) = Set []
-setInt (Set (s:sy)) s2 
-        |  inSet s s2 = insertSet s (setInt (Set sy) s2)
-        |  otherwise  = (setInt (Set sy) s2)  
+setInt (Set (x:xs)) s2 
+        |  inSet x s2 = insertSet x (setInt (Set xs) s2)
+        |  otherwise  = (setInt (Set xs) s2)  
 
 setDif :: (Ord a) => Set a -> Set a -> Set a
 setDif (Set []) _      = Set []
@@ -34,23 +43,28 @@ testDif = do
         return ( r /= (setDif r r))
 
 
-test :: Int -> (Set Int -> Bool) -> [Set Int] -> IO ()
-test n _ [] = print (show n ++ " tests passed")
-test n p (f:fs) = 
-  if p f 
-  then do print ("pass on:" ++ show f)
-          test n p fs
-  else error ("failed test on:" ++ show f)
+test :: Int -> (Set Int -> Set Int -> Bool) -> [Set Int] -> [Set Int] -> IO ()
+test n _ [] _ = print (show n ++ " tests passed")
+test n p (f:fs) (g:gs) = 
+  if (p f g)
+  then do print ("pass on:" ++ show f ++ " and " ++ show g)
+          test n p fs gs
+  else error ("failed test on:" ++ show f ++ " and " ++ show g)
 
-testSets :: Int -> (Set Int -> Bool) -> IO ()
+testSets :: Int -> (Set Int -> Set Int -> Bool) -> IO ()
 testSets n prop = do 
-  fs <- rss n
-  test n prop fs
+  fs1 <- rss n
+  fs2 <- rss n
+  test n prop fs1 fs2
 
-dif1 = testSets 1000 (\x -> (Set [98,99]) == (setDif (insertSet 98 (insertSet 99 x))  x))
-dif2 = testSets 1000 (\x -> (Set []) == (setDif x x))
-int1 = testSets 1000 (\x -> x == (setInt (insertSet 99 x) x))
-int2 = testSets 1000 (\x -> x == (setInt x (insertSet 99 x)))
 
-main = print ("Hello world\n")
+uni1 = testSets 10 (\(Set x) (Set (y)) -> list2set (x ++ y) == (uniSet (list2set x) (list2set y)))
+uni2 = testSets 10 (\x _ -> x == (uniSet x (Set [])))
+
+dif1 = testSets 10 (\x _ -> (Set [98,99]) == (setDif (insertSet 98 (insertSet 99 x))  x))
+dif2 = testSets 10 (\x _ -> (Set []) == (setDif x x))
+int1 = testSets 10 (\x _ -> x == (setInt (insertSet 99 x) x))
+int2 = testSets 10 (\x _ -> x == (setInt x (insertSet 99 x)))
+
+
 
