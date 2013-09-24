@@ -17,3 +17,4 @@ powerList  :: [a] -> [[a]]
 powerList  [] = [[]]
 powerList  (x:xs) = (powerList xs) 
                      ++ (map (x:) (powerList xs))
+                     
