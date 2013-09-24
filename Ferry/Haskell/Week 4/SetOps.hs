@@ -1,7 +1,7 @@
 module SetOps
 
 where 
-  
+
 import Data.List
 import SetOrd
 import SetAssign
@@ -63,8 +63,6 @@ uni2 = testSets 10 (\x _ -> x == (uniSet x (Set [])))
 
 dif1 = testSets 10 (\x _ -> (Set [98,99]) == (setDif (insertSet 98 (insertSet 99 x))  x))
 dif2 = testSets 10 (\x _ -> (Set []) == (setDif x x))
+
 int1 = testSets 10 (\x _ -> x == (setInt (insertSet 99 x) x))
 int2 = testSets 10 (\x _ -> x == (setInt x (insertSet 99 x)))
-
-
-
