@@ -5,6 +5,7 @@ where
 import Week4
 import STAL
 import SetEq
+import Hierarchy
 
 delete :: Eq a => a -> [a] -> [a]
 delete x []         = []
@@ -32,7 +33,7 @@ difference (x:xs) s
 notElem :: Eq a => a -> [a] -> Bool
 notElem = all . (/=)
 
--- HR Book execise 4.53 
+-- HR Book exercise 4.53 
 genUnion :: Eq a => [[a]] -> [a]
 genUnion []     = []
 genUnion (x:xs) = union x (genUnion xs)
@@ -59,3 +60,6 @@ differenceSet (Set []) _    = Set []
 differenceSet (Set (x:xs)) set
         | inSet x set = differenceSet (Set xs) set
         | otherwise   = insertSet x (differenceSet (Set xs) set)
+
+-- HR Book exercise 4.55
+-- I have no idea what needs to be changed, besides a pre-/post-condition maybe?
