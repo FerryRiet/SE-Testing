@@ -2,64 +2,137 @@ module Assigment
 
 where
 
+import Data.List (sort, nub, insert)
+import System.Random
+
 import Week4
 import STAL
-import SetEq
+import SetOrd
 import Hierarchy
+-- import Chapter4
+-- import Chapter5
 
-delete :: Eq a => a -> [a] -> [a]
-delete x []         = []
-delete x (y:ys)
-        | x == y    = ys
-        | otherwise = y : delete x ys
+{- Difficulties in chapter5: -}
+-- In general, providing proof. Hard to find out HOW to prove things, what rules you need to supply to prove things.
+-- I find it diffucult to understand composing relations. But I think that it will get better when I 'work' with it.
+-- Restriction of exercise 5.52. I do not know what a restriction is.
+-- Equivalence notation of modulo (like Proposition 5.65)
+-- 5.6 and the rest... hard to understand the first time. Will have to re-read it.
 
-union :: Eq a => [a] -> [a] -> [a]
-union [] ys     = ys
-union (x:xs) ys = x : union xs (delete x ys)
+{- Random data generator -}
 
-intersect :: Eq a => [a] -> [a] -> [a]
-intersect [] _      = []
-intersect (x:xs) s 
-        | elem x s  = x : intersect xs s
-        | otherwise = intersect xs s
+-- Random data generator for datatype Set Int.
+-- Time spent: 30 minutes.
+randomSet :: IO (Set Int)
+randomSet = do
+        n <- getRandomInt 10
+        m <- getRandomInt 10
+        randomSet' n m
 
--- HR Book exercise 4.51
-difference :: Eq a => [a] -> [a] -> [a]
-difference [] _    = []
-difference (x:xs) s
-        | elem x s  = difference xs s
-        | otherwise = x : difference xs s
+randomSet' :: Int -> Int -> IO (Set Int)
+randomSet' 0 m = return (Set [])
+randomSet' n m = do
+        f <- getRandomInt m
+        (Set fs) <- randomSet' (n-1) m
+        --return (unionSet (Set [f]) fs)
+        {- implementation without unionSet -}
+        return (Set (nub (f:fs)))
 
-notElem :: Eq a => a -> [a] -> Bool
-notElem = all . (/=)
+randomSets :: Int -> IO [((Set Int),(Set Int))]
+randomSets 0 = return []
+randomSets n = do
+        set1 <- randomSet
+        set2 <- randomSet        
+        sets <- randomSets (n-1)
+        return ((set1,set2):sets)
 
--- HR Book exercise 4.53 
-genUnion :: Eq a => [[a]] -> [a]
-genUnion []     = []
-genUnion (x:xs) = union x (genUnion xs)
+noDuplicates :: Set Int -> Bool
+noDuplicates (Set []) = True
+noDuplicates (Set xs) = length xs == length (nub xs)
 
-genIntersect :: Eq a => [[a]] -> [a]
-genIntersect []     = []
-genIntersect (x:xs) 
-        | null xs   = x 
-        | otherwise = intersect x (genIntersect xs)
+{- Test results:
+   Run 100 tests for Unions
+        *Assigment> testUnionSets
+        "pass on:({5},{1,3,2})"
+        "pass on:({0},{0,2,1})"
+        "pass on:({0},{0})"
+        "pass on:({0},{1,2,9})"
+        *Assigment> *** Exception: failed test on:({2,5,6,1,8},{7,2,5,8})
+        *Assigment> unionSet (Set [2,5,6,1,8]) (Set [7,2,5,8])
+        {1,2,5,6,7,2,5,8}
+   Debugging. The provided inSet function expects sorted Sets, updated the function to inSet'.
+   After running many times 100 tests (using testSetFunctions), they all pass.
+   Time spent, about 3 hours, mainly sorting out the test functions and debugging unionSet'.
+-}
 
--- HR Book exercise 4.54
-unionSet :: Eq a => Set a -> Set a -> Set a
-unionSet (Set []) (Set set)     = Set set
-unionSet (Set (x:xs)) (Set set) = insertSet x (unionSet (Set xs) (deleteSet x (Set set)))
+testSetFunctions :: IO ()
+testSetFunctions = tests 100
+        (\ set1 set2 -> 
+                if (noDuplicates set1 
+                 && noDuplicates set2
+                 && noDuplicates (unionSet'     set1 set2)
+                 && noDuplicates (intersectSet  set1 set2)
+                 && noDuplicates (differenceSet set1 set2))
+                then True
+                else False
+        )
 
-intersectSet :: Eq a => Set a -> Set a -> Set a
-intersectSet (Set []) _      = Set []
+tests :: Int -> (Set Int -> Set Int -> Bool) -> IO ()
+tests n f = do 
+  fs <- randomSets 100
+  test n f fs
+
+test :: Int -> (Set Int -> Set Int -> Bool) -> [((Set Int),(Set Int))] -> IO ()
+test n _ [] = print (show n ++ " tests passed")
+test n f (x:xs) = 
+  if f (fst(x)) (snd(x))
+  then do print ("pass on:" ++ show x)
+          test n f xs
+  else error ("failed test on:" ++ show x)
+
+
+{- unionSet is already defined in SetOrd.hs -}
+-- unionSet' must not introduce duplicates
+unionSet' :: Ord a => Set a -> Set a -> Set a
+unionSet' (Set []) set = set
+unionSet' (Set (x:xs)) set
+        | inSet' x set = unionSet' (Set xs) set
+        | otherwise    = unionSet' (Set xs) (insertSet x set)
+
+-- intersectSet checks which elements of set1 occurs in set2
+intersectSet :: Ord a => Set a -> Set a -> Set a
+intersectSet (Set []) _ = Set []
 intersectSet (Set (x:xs)) set
-        | inSet x set = insertSet x (intersectSet (Set xs) set)
+        | inSet' x set = insertSet x (intersectSet (Set xs) set)
         | otherwise   = intersectSet (Set xs) set
 
-differenceSet :: Eq a => Set a -> Set a -> Set a
-differenceSet (Set []) _    = Set []
-differenceSet (Set (x:xs)) set
-        | inSet x set = differenceSet (Set xs) set
-        | otherwise   = insertSet x (differenceSet (Set xs) set)
+-- differenceSet does (Set A - Set B)
+differenceSet :: Ord a => Set a -> Set a -> Set a
+differenceSet set (Set [])     = set
+differenceSet set (Set (x:xs)) = differenceSet (deleteSet x set) (Set (xs))
 
--- HR Book exercise 4.55
--- I have no idea what needs to be changed, besides a pre-/post-condition maybe?
+-- inSet' checks wether an element exists in a Set
+inSet' :: Ord a => a -> Set a -> Bool  
+inSet' x (Set xs) = elem x xs
+
+{- Helper functions -}
+
+
+-- getRandomInt creates a random integer between zero and n
+getRandomInt :: Int -> IO Int
+getRandomInt n = getStdRandom (randomR (0,n))
+
+-- genIntList creates a list of max 8 Ints from zero to 100
+genIntList :: IO [Int]
+genIntList = do 
+        n <- getRandomInt 8
+        m <- getRandomInt 100
+        getRandomInts n m 
+                   
+-- getRandomInts creates a list of 'n' Ints from zero to 'm'
+getRandomInts :: Int -> Int -> IO [Int]
+getRandomInts 0 m = return []
+getRandomInts n m = do
+        f <- getRandomInt m
+        fs <- getRandomInts (n-1) m
+        return (f:fs)
