@@ -2,13 +2,13 @@ module Assigment
 
 where
 
-import Data.List (sort, nub, insert)
+import Data.List (sort, nub, insert, union)
 import System.Random
 
-import Week4
-import STAL
+--import Week4
+--import STAL
 import SetOrd
-import Hierarchy
+--import Hierarchy
 -- import Chapter4
 -- import Chapter5
 
@@ -25,8 +25,8 @@ import Hierarchy
 -- Time spent: 30 minutes.
 randomSet :: IO (Set Int)
 randomSet = do
-        n <- getRandomInt 10
-        m <- getRandomInt 10
+        n <- getRandomInt 25
+        m <- getRandomInt 25
         randomSet' n m
 
 randomSet' :: Int -> Int -> IO (Set Int)
@@ -79,7 +79,7 @@ testSetFunctions = tests 100
 
 tests :: Int -> (Set Int -> Set Int -> Bool) -> IO ()
 tests n f = do 
-  fs <- randomSets 100
+  fs <- randomSets n
   test n f fs
 
 test :: Int -> (Set Int -> Set Int -> Bool) -> [((Set Int),(Set Int))] -> IO ()
@@ -115,8 +115,131 @@ differenceSet set (Set (x:xs)) = differenceSet (deleteSet x set) (Set (xs))
 inSet' :: Ord a => a -> Set a -> Bool  
 inSet' x (Set xs) = elem x xs
 
-{- Helper functions -}
 
+
+{- Binary relations -}
+{- Time spent: about 3 hours -}
+
+type Rel a = [(a,a)]
+
+infixr 5 @@
+
+(@@) :: Eq a => Rel a -> Rel a -> Rel a
+r @@ s = nub [ (x,z) | (x,y) <- r, (w,z) <- s, y == w ]
+
+-- transitive Closure, keep on going till it is transitive.
+trClos :: Ord a => Rel a -> Rel a
+trClos r 
+        | transR r  = r
+        | otherwise = trClos (union r (compR r r))
+
+-- Relation is transitive?
+transR :: Ord a => Rel a -> Bool
+transR [] = True
+transR s  = and [ trans pair s | pair <- s ] 
+        where trans (x,y) r = and [ elemInRel (x,v) r | (u,v) <- r, u == y ]
+
+-- inSet' checks wether an element exists in a Set
+elemInRel :: Ord a => (a,a) -> [(a,a)] -> Bool  
+elemInRel (x,y) []      = False
+elemInRel (x,y) (r:rs)
+        | x == fst(r) && y == snd(r) = True
+        | otherwise = elemInRel (x,y) rs
+
+-- Composition of a relation
+composePair :: Ord a => (a,a) -> Rel a -> Rel a
+composePair (x,y) [] = []
+composePair (x,y) ((u,v):s)
+        | y == u = insert (x,v) (composePair (x,y) s)
+        | otherwise = composePair (x,y) s
+
+compR :: Ord a => Rel a -> Rel a -> Rel a
+compR [] _        = []
+compR ((x,y):s) r = union (composePair (x,y) r) (compR s r)
+
+{- Test report:
+        Testable properties:
+        - No duplicate items.
+        - No duplicate items after transitive closure.
+        - Domain is the same as the original list.
+        - Range is the same as the original list.
+   Test Results:
+        "50000 tests passed"
+
+-}
+
+testTR :: IO ()
+testTR = testTRn 100
+
+testTRn :: Int -> IO ()
+testTRn n = tests' n
+        (\ r -> 
+                if (length r == length (removeDuplicates r)
+                 && length (trClos r) == length (removeDuplicates (trClos r))
+                 && domR(r) == domR(trClos r)
+                 && ranR(r) == ranR(trClos r))
+                then True
+                else False
+        )
+
+
+tests' :: Int -> (Rel Int -> Bool) -> IO ()
+tests' n f = do 
+  fs <- randomRels n
+  test' n f fs
+
+test' :: Int -> (Rel Int -> Bool) -> [Rel Int] -> IO ()
+test' n _ [] = print (show n ++ " tests passed")
+test' n f (x:xs) = 
+  if f x
+  then do print ("pass on:" ++ show x)
+          test' n f xs
+  else error ("failed test on:" ++ show x)
+
+
+randomRel :: IO (Rel Int)
+randomRel = do
+        n <- getRandomInt 25
+        m <- getRandomInt 25
+        randomRel' n m
+
+-- this function just removes duplicate entries
+randomRel' :: Int -> Int -> IO (Rel Int)
+randomRel' n m = do
+        x <-  (randomRel'' n m)
+        return (removeDuplicates x)
+
+randomRel'' :: Int -> Int -> IO (Rel Int)
+randomRel'' 0 m = return []
+randomRel'' n m = do
+        x <- getRandomInt m
+        y <- getRandomInt m
+        rs <- randomRel'' (n-1) m
+        return ((x,y):rs)
+
+randomRels :: Int -> IO [Rel Int]
+randomRels 0 = return []
+randomRels n = do
+        r  <- randomRel
+        rs <- randomRels (n-1)
+        return (r:rs)
+
+removeDuplicates :: Ord a => Rel a -> Rel a
+removeDuplicates []   = []
+removeDuplicates (r:rs)
+        | elemInRel r rs = removeDuplicates rs
+        | otherwise      = insert r (removeDuplicates rs)
+
+-- Domain of relation
+domR :: Ord a => Rel a -> [a]
+domR r = sort $ nub [ x | (x,_) <- r ]
+
+-- Range of relation
+ranR :: Ord a => Rel a -> [a]
+ranR r = sort $ nub [ y | (_,y) <- r ]
+
+
+{- Helper functions -}
 
 -- getRandomInt creates a random integer between zero and n
 getRandomInt :: Int -> IO Int
