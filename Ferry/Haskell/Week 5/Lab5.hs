@@ -17,7 +17,7 @@ assert1 p f x = if p x (f x) then f x
                 else error "assert1"
 -}
 
--- Mergesort
+-- MergeSort
 -- Time spend 15 minutes
 
 mergeSort :: Ord a => [a] -> [a]
@@ -72,13 +72,12 @@ genIntList'  n =  do c <- getRandomInt 16
                      l <- genIntList' (n-1)
                      return (c:l)
 
-genIntLists :: Int -> IO [[Int]]
-genIntLists 0 = return []
-genIntLists n = do
-                f1 <- genIntList 16
-                f2 <- genIntLists (n-1)
+genIntLists :: Int -> Int -> IO [[Int]]
+genIntLists 0 _ = return []
+genIntLists n size = do
+                f1 <- genIntList size
+                f2 <- genIntLists (n-1) size
                 return (f1:f2)
-
 
 -- Modified test framework from Week 2 code
 -- Time spend 10 minutes
@@ -91,27 +90,15 @@ test n p (f:fs) =
           test n p fs
   else error ("failed test on:" ++ show f)
 
-testSets :: Int -> ([Int] -> Bool) -> IO ()
-testSets n prop = do 
-  fs1 <- genIntLists n
+testSorts :: Int -> ([Int] -> Bool) -> IO ()
+testSorts n prop = do 
+  fs1 <- genIntLists n 100
   test n prop fs1
 
 -- Testable properties: compare sort results between different algorithms
 -- Time spend 30 min
 
-srt1 = testSets 10 (\x  -> sort x == (mergeSortF  x))
-srt2 = testSets 10 (\x  -> (splitSortA) x == (mergeSortA  x))
-srt3 = testSets 10 (\x  -> (splitSortA) x == (sort  x))
-
-
-
-
-
-
-
-
-
-
-
-
-
+srt0 = testSorts 10 (\x  -> sort x == (mergeSortF  x))
+srt1 = testSorts 10 (\x  -> sort x == (mergeSortA  x))
+srt2 = testSorts 10 (\x  -> (splitSortA) x == (mergeSortA  x))
+srt3 = testSorts 10 (\x  -> (splitSortA) x == (sort  x))

@@ -7,7 +7,7 @@
 module RandomSudoku where 
 
 import Data.List
-import Week5
+import SudokuNRC
 import System.Random
 
 emptyN :: Node
@@ -113,4 +113,9 @@ main = do [r] <- rsolveNs [emptyN]
           showNode s
           solveShowNs [s]
 
-             
+pain :: IO ()
+pain = do [r] <- rsolveNs [emptyN]
+          showNode r
+          s  <- genProblem r
+          showSudoku  $ fst s
+          showConstraints $ snd s
