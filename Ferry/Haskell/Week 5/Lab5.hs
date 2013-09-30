@@ -1,3 +1,9 @@
+{-
+   Lab assignment 5
+   Author Ferry (2013-9-30)
+-}
+
+
 module Lab5 
 
 where
@@ -12,6 +18,8 @@ assert1 p f x = if p x (f x) then f x
                 else error "assert1"
 -}
 
+-- Mergesort
+-- Time spend 15 minutes
 
 mergeSort :: Ord a => [a] -> [a]
 mergeSort [] = []
@@ -20,6 +28,9 @@ mergeSort (x:xs) = mergeA [x] (mergeSort xs)
 mergeSortA :: Ord a => [a] -> [a]
 mergeSortA  = assert1 (\ s x ->  x == sort s ) mergeSort 
 
+
+-- Split sort 
+-- Time spend 30 minutes
 
 split :: [a] -> ([a],[a])
 split xs = let
@@ -39,6 +50,7 @@ splitSortA  = assert1 (\ s x ->  x == mergeSortA s ) splitSort
 
 {-
     Generate random lists for sorting
+    Time spend 15 minutes
 -}
 
 getRandomInt :: Int -> IO Int
@@ -62,6 +74,7 @@ genIntLists n = do
 
 
 -- Modified test framework from Week 2 code
+-- Time spend 10 minutes
 
 test :: Int -> ([Int] -> Bool) -> [[Int]] -> IO ()
 test n _ [] = print (show n ++ " tests passed")
@@ -76,7 +89,7 @@ testSets n prop = do
   fs1 <- genIntLists n
   test n prop fs1
 
--- Testable properties compare sort result between different algorithms
+-- Testable properties compare sort results between different algorithms
 -- Time spend 30 min
 
 srt1 = testSets 10 (\x  -> sort x == (mergeSortA  x))
