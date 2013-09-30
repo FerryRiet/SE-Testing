@@ -3,7 +3,6 @@
    Author Ferry (2013-9-30)
 -}
 
-
 module Lab5 
 
 where
@@ -24,6 +23,14 @@ assert1 p f x = if p x (f x) then f x
 mergeSort :: Ord a => [a] -> [a]
 mergeSort [] = []
 mergeSort (x:xs) = mergeA [x] (mergeSort xs)
+
+
+-- The next implementation by running hlint
+
+mergeSortF :: Ord a => [a] -> [a]
+mergeSortF = foldr (\ x -> mergeA [x]) [] 
+
+-- Next the asserted one
 
 mergeSortA :: Ord a => [a] -> [a]
 mergeSortA  = assert1 (\ s x ->  x == sort s ) mergeSort 
@@ -89,10 +96,10 @@ testSets n prop = do
   fs1 <- genIntLists n
   test n prop fs1
 
--- Testable properties compare sort results between different algorithms
+-- Testable properties: compare sort results between different algorithms
 -- Time spend 30 min
 
-srt1 = testSets 10 (\x  -> sort x == (mergeSortA  x))
+srt1 = testSets 10 (\x  -> sort x == (mergeSortF  x))
 srt2 = testSets 10 (\x  -> (splitSortA) x == (mergeSortA  x))
 srt3 = testSets 10 (\x  -> (splitSortA) x == (sort  x))
 
