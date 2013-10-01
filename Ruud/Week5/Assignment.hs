@@ -11,6 +11,10 @@ mergeSrt :: Ord a => [a] -> [a]
 mergeSrt [] = []
 mergeSrt (x:xs) = merge [x] (mergeSrt xs)
 
+{- The output is a permutation of the input -}
+permutationProp :: Ord a => [a] -> [a] -> Bool
+permutationProp xs ys = isPermutation xs ys
+
 {- Length of input and output of the list is the same -}
 lengthProp :: Ord a => [a] -> [a] -> Bool
 lengthProp xs ys = length xs == length ys
@@ -19,8 +23,19 @@ lengthProp xs ys = length xs == length ys
 sortedOutputProp :: Ord a => [a] -> [a] -> Bool
 sortedOutputProp xs ys = sort xs == ys
 
+-- isPermutation compares two lists and returns True if the list is a permutation
+isPermutation :: Eq a => [a] -> [a] -> Bool
+isPermutation [] []             = True
+isPermutation [] _              = False
+isPermutation _ []              = False
+isPermutation (x:xs) (y:ys)  
+        | x == y = isPermutation xs ys
+        | otherwise = isPermutation xs (delete x (y:ys))
+
 mergeSrtA :: Ord a => [a] -> [a]
-mergeSrtA = assert1 lengthProp $ assert1 sortedOutputProp mergeSrt
+mergeSrtA = assert1 permutationProp 
+          $ assert1 sortedOutputProp 
+            mergeSrt
 
 -- indication of time spent: about 30 minutes.
 
@@ -41,9 +56,9 @@ sublistProp1 xs ys =
   sublist xs ys
 
 mergeSrtSplitA :: Ord a => [a] -> [a]
-mergeSrtSplitA = assert1 lengthProp 
-        $ assert1 sortedOutputProp 
-        $ assert1 sublistProp1
-        mergeSrtSplit
+mergeSrtSplitA = assert1 permutationProp 
+               $ assert1 sortedOutputProp 
+               $ assert1 sublistProp1
+                 mergeSrtSplit
 
 -- indication of time spent: about 30 minutes.
