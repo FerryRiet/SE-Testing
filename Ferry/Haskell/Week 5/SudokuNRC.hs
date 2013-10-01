@@ -77,6 +77,10 @@ showConstraints (f:fs) = do
                     showConstraint f
                     showConstraints fs
 
+classifyConstraints :: [Constraint] -> Int
+classifyConstraints [] = 0
+classifyConstraints ((row,col,cl):cs) = length cl + classifyConstraints cs 
+
 
 bl :: Int -> [Int]
 bl x = concat $ filter (elem x) blocks 
@@ -292,3 +296,5 @@ exampleNRC = [[0,0,0,3,0,0,0,0,0],
 
 
 
+
+-- main = solveAndShow exampleNRC

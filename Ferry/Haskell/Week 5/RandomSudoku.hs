@@ -91,10 +91,11 @@ eraseN n (r,c) = (s, constraints s)
 
 -- return a "minimal" node with a unique solution
 -- by erasing positions until the result becomes ambiguous
-minimalize :: Node -> [(Row,Column)] -> Node
-minimalize n [] = n
-minimalize n ((r,c):rcs) | uniqueSol n' = minimalize n' rcs
-                         | otherwise    = minimalize n  rcs
+minimalize :: Node -> [(Row,Column)] -> Int -> Node
+minimalize n [] _ = n
+minimalize n ((r,c):rcs) d | classifyConstraints (snd n) >= d = n 
+                           | uniqueSol n' = minimalize n' rcs d
+                           | otherwise    = minimalize n  rcs d
   where n' = eraseN n (r,c)
 
 filledPositions :: Sudoku -> [(Row,Column)]
@@ -103,8 +104,17 @@ filledPositions s = [ (r,c) | r <- positions,
 
 genProblem :: Node -> IO Node
 genProblem n = do ys <- randomize xs
-                  return (minimalize n ys)
+                  return (minimalize n ys 340)
    where xs = filledPositions (fst n)
+
+-- Modified test framework from Week 2 code
+-- Time spend 10 minutes
+
+isMinimal :: Node -> Bool
+isMinimal n = if sud2grid (fst n) == sud2grid (fst (minimalize n xs 400)) 
+              then True
+              else False
+              where xs = filledPositions (fst n)
 
 --main :: IO ()
 main = do [r] <- rsolveNs [emptyN]
@@ -119,3 +129,5 @@ pain = do [r] <- rsolveNs [emptyN]
           s  <- genProblem r
           showSudoku  $ fst s
           showConstraints $ snd s
+          if isMinimal s then print "Minimal" else print "not-minimal"
+          print ("Class of Sudoku: " ++ show (classifyConstraints (snd s)))
