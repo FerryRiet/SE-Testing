@@ -62,3 +62,4 @@ mergeSrtSplitA = assert1 permutationProp
                  mergeSrtSplit
 
 -- indication of time spent: about 30 minutes.
+
