@@ -102,16 +102,21 @@ filledPositions :: Sudoku -> [(Row,Column)]
 filledPositions s = [ (r,c) | r <- positions,  
                               c <- positions, s (r,c) /= 0 ]
 
-genProblem :: Node -> IO Node
-genProblem n = do ys <- randomize xs
-                  return (minimalize n ys 340)
-   where xs = filledPositions (fst n)
+genProblem :: Node -> Int -> IO Node
+genProblem n l = do ys <- randomize xs
+                    return (minimalize n ys l)
+               where xs = filledPositions (fst n)
 
--- Modified test framework from Week 2 code
--- Time spend 10 minutes
+
+minimalize' :: Node -> [(Row,Column)] -> Node
+minimalize' n [] = n
+minimalize' n ((r,c):rcs)  | uniqueSol n' = n'
+                           | otherwise    = minimalize' n  rcs
+  where n' = eraseN n (r,c)
+
 
 isMinimal :: Node -> Bool
-isMinimal n = if sud2grid (fst n) == sud2grid (fst (minimalize n xs 400)) 
+isMinimal n = if sud2grid (fst n) == sud2grid (fst (minimalize' n xs)) 
               then True
               else False
               where xs = filledPositions (fst n)
@@ -119,15 +124,22 @@ isMinimal n = if sud2grid (fst n) == sud2grid (fst (minimalize n xs 400))
 --main :: IO ()
 main = do [r] <- rsolveNs [emptyN]
           showNode r
-          s  <- genProblem r
+          s  <- genProblem r 100
           showNode s
           solveShowNs [s]
 
-pain :: IO ()
-pain = do [r] <- rsolveNs [emptyN]
+--pain :: IO ()
+pain = do r <- genRandomSudoku 
           showNode r
-          s  <- genProblem r
-          showSudoku  $ fst s
-          showConstraints $ snd s
-          if isMinimal s then print "Minimal" else print "not-minimal"
+          s  <- genProblem r 400
+          showNode s
+          --showConstraints $ snd s
+          if isMinimal s 
+          then print "Minimal" 
+          else print "Not-minimal"
           print ("Class of Sudoku: " ++ show (classifyConstraints (snd s)))
+          solveShowNs [s]
+
+
+
+
