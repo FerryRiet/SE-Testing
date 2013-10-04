@@ -65,20 +65,24 @@ subString (x:xs) [] = False
 subString (x:xs) (y:ys) = (x==y) && (prefix xs ys)
 						|| (subString (x:xs) ys) 
 
-prefix :: String -> String -> Bool
-prefix [] ys = True
-prefix (x:xs) [] = False
-prefix (x:xs) (y:ys) = (x==y) && prefix xs ys
+-- VVZ: this is already in GS which you imported
+--prefix :: String -> String -> Bool
+--prefix [] ys = True
+--prefix (x:xs) [] = False
+--prefix (x:xs) (y:ys) = (x==y) && prefix xs ys
 
 -- Exercise 1.20
 lengths :: [[a]] -> [Int]
-lengths [] = 0
+-- VVZ: the next line is not type-correct, it takes a list and gives you a number, not a list of numbers
+-- VVZ: it is also unnecessary, map will take care of it
+-- lengths [] = 0
 lengths = map length
 
 -- Exercise 1.21
 sumLengths :: [[a]] -> Int
 sumLengths [] = 0
 sumLengths (x:xs) = length x + sumLengths xs
+-- VVZ: how about 'sumLengths = sum . lengths'? Be lazy, reuse your old functions!
 
 -- Exercise 1.24
 --

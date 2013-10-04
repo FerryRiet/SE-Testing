@@ -28,3 +28,5 @@ triangle' [a,b,c]
 		allAreEqual = length (nub([a, b, c])) == 1
 		twoAreEqual = length (nub([a, b, c])) == 2
 		isPythagorean = a^2 + b^2 == c^2
+
+-- VVZ: bloody perfect!

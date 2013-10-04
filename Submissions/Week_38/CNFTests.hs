@@ -13,8 +13,11 @@ testCNF :: Form -> Bool
 testCNF f = equiv f g
 		    where g = cnf f
 
-
+-- VVZ: the definition of CNF is "conjunction of disjunctions", right?
+-- VVZ: this automatically means no disjunction of disjunctions ever.
+-- VVZ: on the slides we used math formulae relying on associativity, but the implementation is multiary, it uses a list.
 t1 = testCNF (Dsj [Dsj [p,q],q])
+-- VVZ: cnf (Dsj [Dsj [p,q],q]) returns Dsj [Dsj [p, q], q], while it should return Dsj [p, q, q]
 
 {-
 Coding the first version took +- 3 hours, it did not work at all 

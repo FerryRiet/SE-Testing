@@ -138,3 +138,4 @@ parity xs = even (length (filter (==True) xs))
 -- Exercise 2.53
 evenNR :: (a -> Bool) -> [a] -> Bool
 evenNR p xs = True -- TODO 
+-- VVZ: evenNR = parity . map
