@@ -1,16 +1,16 @@
 Assignments are placed in Assignment.hs
 ========
 
-{- 
+
     Exercise 1 
 
     Assertion: mergeSrtA 
         - checks if the output is a permutation of the input
         - checks if the sorted input is the same as the output
     Indication of time spent: about 30 minutes.
--}
 
-{- 
+
+ 
     Exercise 2 
 
     Assertion: mergeSrtSplitA 
@@ -18,9 +18,9 @@ Assignments are placed in Assignment.hs
         - checks if the sorted input is the same as the output
         - checks if all splitted lists are sublists
     Indication of time spent: about 30 minutes.
--}
 
-{- 
+
+ 
     Exercise 3 
 
     Changes in specifications:
@@ -59,21 +59,21 @@ Assignments are placed in Assignment.hs
         - Stripped a list of nrcSudoku's of a website (http://www.hoeheethet.com/sudoku/sudoku.php) and tested them on my modified function.
 
     Indication of time spent: 2 hours.
--}
 
-{- 
+
+
     Exercise 4
 
     For the random sudoku generator to be able to work properly I only had to replace the Week5 module for the Week5modified module.
 
     Indication of time spent: 30 minutes.
--}
 
-{-
+
+
     Exercise 5
 
     How to find out that the generated sudoku is minimal?
         - Remove all the items one by one, and see if the sudoku becomes ambigious.
 
     Indication of time spent: 2 hours.
--}
+
