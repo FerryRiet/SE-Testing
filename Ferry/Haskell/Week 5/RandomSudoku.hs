@@ -146,14 +146,16 @@ testSudokus n d prop = do
                       testSudoku n prop fs1 
 
 {-
-  testSudodus will generate Sudokus of given difficulty and runs a test on it.
+  testSudodus will generate Sudokus of given difficulty and runs a test on it. Sudokus with a lower 
+  difficulty level of 320 are possible not ninimal, level below 300 are not minimal  
 -}
 
 tSud0 = testSudokus 3 40 (\ x ->  consistent (fst x) )                      
 tSud1 = testSudokus 3 40 (\ x ->  consistent (fst (solveNs [x]!! 0)) )                      
+tSud1' = testSudokus 3 100 (\ x ->  consistent (fst x) && consistent (fst (solveNs [x]!! 0)) && (isMinimal x == False) )                      
 tSud2 = testSudokus 3 40 (\ x ->  length (filledPositions (fst (solveNs [x]!! 0))) == 81 )                      
 tSud3 = testSudokus 3 40 (\ x ->  isMinimal x == False )                      
-tSud4 = testSudokus 1 400 isMinimal
+tSud4 = testSudokus 1 300 isMinimal
 --tSud5 = testSudokus 1 40 (\ x -> show x )                      
 
 
