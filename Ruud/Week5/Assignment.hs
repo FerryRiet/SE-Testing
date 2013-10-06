@@ -6,6 +6,7 @@ import Data.List
 import Week4 
 --import Week5
 import Week5modified
+import NRCSudoku
 import RandomSudoku
 
 {- 
@@ -135,6 +136,24 @@ mergeSrtSplitA = assert1 permutationProp
     How to find out that the generated sudoku is minimal?
         - Remove all the items one by one, and see if the sudoku becomes ambigious.
 
+        *Assignment> testSudoku
+        "Running 7 tests."
+        "Test successful."
+        "Test successful."
+        "Test successful."
+        "Test successful."
+        "Test successful."
+        "Test successful."
+        "Test successful."
+        "All done"
+        *Assignment> testSudoku
+        "Running 4 tests."
+        "Test successful."
+        "Test successful."
+        "Test successful."
+        "Test successful."
+        "All done"
+
     Indication of time spent: 2 hours.
 -}
 
@@ -144,7 +163,7 @@ mergeSrtSplitA = assert1 permutationProp
 
 testSudoku :: IO ()
 testSudoku = do
-        r <- getRandomInt 10
+        r <- getRandomInt 9
         print ("Running " ++ show (r+1) ++ " tests.")
         testSudoku' (r+1)
 
@@ -215,3 +234,16 @@ notUnique1 = [[0,0,0,0,0,9,0,0,0],
              [0,0,0,0,0,0,9,0,0],
              [4,5,3,0,0,0,0,0,0],
              [0,0,0,0,0,0,0,6,1]]
+
+{-
+    Exercise extra:
+        - Define the difficulty of a generated problem
+
+    #1 Calc the number of search paths.
+-}
+
+measureSudoku = do 
+        [r] <- rsolveNs [emptyN]
+        node  <- genProblem r
+        showNode node
+        showConstraints node

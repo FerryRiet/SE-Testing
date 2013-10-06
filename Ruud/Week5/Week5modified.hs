@@ -339,6 +339,22 @@ type Node = (Sudoku,[Constraint])
 showNode :: Node -> IO()
 showNode = showSudoku . fst
 
+showConstraints :: Node -> IO()
+showConstraints = showConstraint . snd
+
+showConstraint :: [Constraint] -> IO()
+showConstraint [] = putStr ""
+showConstraint ((r,c,cs):xs) = do
+      putStr ("(" ++ show r ++ "," ++ show c ++ ") ")
+      showValues cs
+      showConstraint xs
+
+showValues :: [Value] -> IO()
+showValues [] = putStr "\n"
+showValues (v:vs) = do
+        putStr (show v ++ ",")
+        showValues vs
+
 solved  :: Node -> Bool
 solved = null . snd
 
@@ -456,3 +472,4 @@ example5 = [[1,0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,7,0,0],
             [0,0,0,0,0,0,0,8,0],
             [0,0,0,0,0,0,0,0,9]]
+
