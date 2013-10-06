@@ -96,9 +96,35 @@ testSorts n prop = do
   test n prop fs1
 
 -- Testable properties: compare sort results between different algorithms
+-- with random input.
 -- Time spend 30 min
 
 srt0 = testSorts 10 (\x  -> sort x == (mergeSortF  x))
 srt1 = testSorts 10 (\x  -> sort x == (mergeSortA  x))
 srt2 = testSorts 10 (\x  -> (splitSortA) x == (mergeSortA  x))
 srt3 = testSorts 10 (\x  -> (splitSortA) x == (sort  x))
+
+-- Test sort on known input sets
+
+-- 1st not even length sorted
+set1 = [1,2,3,4,5,6,7,8,9,10,11,12,13]
+rset1 = [1,2,3,4,5,6,7,8,9,10,11,12,13]
+
+-- 2ed even length sorted
+set2 = [1,2,3,4,5,6,7,8,9,10,11,12]
+rset2 = [1,2,3,4,5,6,7,8,9,10,11,12]
+
+-- 3rd not even length sorted inverted
+set3 = [13,12,11,10,9,8,7,6,5,4,3,2,1]
+rset3 = [1,2,3,4,5,6,7,8,9,10,11,12,13]
+
+-- 4rd even length sorted inverted
+set4 = [12,11,10,9,8,7,6,5,4,3,2,1]
+rset4 = [1,2,3,4,5,6,7,8,9,10,11,12]
+
+-- 5ed even length sorted
+set5 = [13,12,11,10,9,8,7,6,5,4,3,2,1]
+rset2 = [1,2,3,4,5,6,7,8,9,10,11,12,13]
+
+
+
