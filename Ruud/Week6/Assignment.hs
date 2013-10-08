@@ -127,6 +127,7 @@ composites' (n:ns) = n : composites'
 {- Exercise 4 -}
 
 -- test using earlier created test function which checks all numbers
+testF :: [Integer] -> IO ()
 testF [] = print "All done."
 testF (k:ks) = do
         isP <- primeF 10 k 
@@ -167,3 +168,54 @@ testF1 = testF (take 10000 composites)
 -}
 
 {- Exercise 5 -}
+testCarmichael = testF carmichael 
+
+{- Result:
+        *Assignment> testF carmichael
+        "294409 is a prime!"
+        "56052361 is a prime!"
+        "118901521 is a prime!"
+        "172947529 is a prime!"
+        "228842209 is a prime!"
+        "1299963601 is a prime!"
+        "2301745249 is a prime!"
+        "9624742921 is a prime!"
+        "11346205609 is a prime!"
+        "13079177569 is a prime!"
+        "21515221081 is a prime!"
+        "27278026129 is a prime!"
+        "65700513721 is a prime!"
+        "71171308081 is a prime!"
+        "100264053529 is a prime!"
+        "168003672409 is a prime!"
+        "172018713961 is a prime!"
+        "173032371289 is a prime!"
+        "464052305161 is a prime!"
+        "527519713969 is a prime!"
+        "663805468801 is a prime!"
+        "727993807201 is a prime!"
+        "856666552249 is a prime!"
+        etc... etc...
+
+        testCarmichael
+        "56052361 is a prime!"
+        "118901521 is a prime!"
+        "172947529 is a prime!"
+        "216821881 is a prime!"
+        "228842209 is a prime!"
+        "1299963601 is a prime!"
+        "2301745249 is a prime!"
+        "9624742921 is a prime!"
+        "11346205609 is a prime!"
+        "13079177569 is a prime!"
+        etc... slightly different number
+
+
+
+        map isPrime carmichael
+        [False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,Interrupted
+        map prime_test_F' carmichael
+        [False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,Interrupted.
+        
+        Todo, "Read the entry on Carmichael numbers on Wikipedia to explain what you find." 
+-}
