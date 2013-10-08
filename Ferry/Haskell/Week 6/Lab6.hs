@@ -170,56 +170,114 @@ testMR n (x:xs) = do
             else
                 testMR n xs 
 
-{-
-Assignment 8
+{- Assignment 6
+    Testing the Miller-Rabin primality check on Carmichael numbers.
 
-You can use the Miller-Rabin primality check to discover some large Mersenne
-primes. The recipe: take a large prime p, and use the Miller-Rabin algorithm
-to check whether 2p 􀀀 1 is also prime. Find information about Mersenne primes
-on internet and check whether the numbers that you found are genuine Mersenne
-primes. Report on your ndings.
+    What do you findings:
+
+    testMR 1 $ take 1000 carmichael
+    
+
+    testMR 2 $ take 1000 carmichael
+    testMR 4 $ take 1000 carmichael
+    testMR 8 $ take 1000 carmichael
+    testMR 16 $ take 1000 carmichael
+    testMR 32 $ take 1000 carmichael
+
+-}
+
+{-
+Assignment 7
+
+The Miller-Rabin primality check to discover some large Mersenne primes. 
+
+Findings.
+
+
+Run  
+    Started mersenne on 2 and found quickly:
+
+    "Mersenne 2"
+    "Mersenne 3"
+    "Mersenne 5"
+    "Mersenne 7"
+    "Mersenne 13"
+    "Mersenne 17"
+    "Mersenne 19"
+    "Mersenne 31"
+    "Mersenne 61"
+    "Mersenne 89"
+    "Mersenne 107"
+    "Mersenne 127"
+    "Mersenne 521"
+    "Mersenne 607"
+    "Mersenne 1279"
+    "Mersenne 2203"
+    "Mersenne 2281"
+    "Mersenne 3217"
+    "Mersenne 4253"
+    "Mersenne 4423
+    ^CInterrupted.
+
+    Compared with list in Wikipedia a match on the first 20 entry's
+
+    Next started: 
+
+    mersenne (2^128) -- Running from dd 8-10-2013 15:30   
+
 -}
 
 mersenne :: Integer -> IO ()
 mersenne n = do
-              --p <- n -- 
               res <- primeMR 4 (2^n - 1)  
               nextP <- returnNextPrime n
               if res
                 then
                   do print ("Mersenne " ++ show n)
-                     mersenne (nextP)
+                     mersenne nextP
                 else
-                  mersenne (nextP)
-
-
-
-
+                  mersenne nextP
 
 
 {-
   Assignment 8 
 
   Step one ;
+    Generate two random primes
+  Step one ;
+    generate public key
+  Step one ;
+    generate private key
 
-  Generate two random primes
-
-
+  Final Play Alice <> Bob 
 -}
 
 getRandomprime :: IO Integer
 getRandomprime = do
-                    rn <- randomRIO (2^127, 2^129)  :: IO Integer
+                    rn <- randomRIO (2^128, 2^129-1)  :: IO Integer
                     returnNextPrime rn
 
 returnNextPrime :: Integer -> IO Integer
 returnNextPrime n = do 
-                     result <-  primeMR 4 (n+1)
+                     result <-  primeMR 100 (n+1)
                      if result
                      then
                        return (n+1) 
                      else
                        returnNextPrime (n+1)
 
-
-
+rsa :: IO ()
+rsa = do
+        p11 <- getRandomprime
+        q11 <- getRandomprime
+        let  pkey = rsa_public p11 q11
+        let  ppri = rsa_private p11 q11
+        print p11 
+        print q11
+        print (pkey)
+        print (ppri)        
+        let cm = rsa_encode ppri 11
+        let pm = rsa_decode pkey cm
+        print (cm)
+        print (pm)
+  
