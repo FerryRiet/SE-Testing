@@ -4,9 +4,12 @@ where
 
 import Week6
 import Lab6
+import Control.Monad
 import Text.Printf
 import Control.Exception
 import System.CPUTime
+import System.TimeIt
+
 
 {- Exercise 1:
     Created exM 
@@ -91,8 +94,27 @@ timeToString a = do
         (66.16 secs, 1541471992 bytes)
 -}
 
-{- Exercise 3
+{- Some random code -}
 
--}
+-- test these numbers
+primeList :: Integer -> Integer -> [Integer]
+primeList n m = [ x | x <- [n..m], isPrime x]
+
+infix 1 ==> 
+
+(==>) :: Bool -> Bool -> Bool
+p ==> q = (not p) || q
+
+-- test all numbers, instead of a random number
+prime_test_F' :: Integer -> Bool
+prime_test_F' n = prime_test_F'' (n-1) n
+     
+prime_test_F'' :: Integer -> Integer -> Bool
+prime_test_F'' 0 n = True
+prime_test_F'' x n = ((exM x (n-1) n == 1)) && prime_test_F'' (x-1) n
+
+{- Exercise 3 -}
+
 composites :: [Integer]
-composites = []
+composites = [ x | x <- [4..], not(isPrime x)]
+    
