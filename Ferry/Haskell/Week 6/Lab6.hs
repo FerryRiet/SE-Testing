@@ -97,13 +97,106 @@ composites' (n:ns) = n : composites' (filter (\ m -> length (take 2 (factors m))
 
 c2 = [ i | i <- [4..], head (factors i) /= i ]
 
-testF :: [Integer] -> IO ()
-testF [] = print "Test done!"
-testF (x:xs) = do
-            result <- prime_test_F x
+{-Assignment 4
+
+      First Single Fermat test gave 4 as a minimal prime (failed composite) 
+
+      Test runs:
+
+      testF 1 $ take 10000 c2
+      
+      Large set of failures with 4 as a minimum
+
+      testF 2 $ take 10000 c2
+
+      An average of 8 failures with 9 as a minimum.
+
+      testF 3 $ take 10000 c2
+
+      An average of 5 failures with 15 as a minimum.
+
+      testF 4 $ take 10000 c2
+
+      An average of 3 failures with 561 as a minimum.
+
+      testF 5 $ take 10000 c2
+
+      An average of 2 failures with 91 as a minimum.
+
+      testF 6 $ take 10000 c2
+
+      An average of 1 failures with 1105 as a minimum.
+
+      Finally with the increase of k the number of tests the composite has to pass
+      make it more likely to detect it is a composite. A prime will pass all tests 
+      the behavior of composites is not described.
+
+
+-}
+testF :: Int -> [Integer] -> IO ()
+testF n [] = print "Test done!"
+testF n (x:xs) = do
+            result <- primeF n x
             if result 
             then
-                do print ("Failed composite " ++ show x)
-                   testF xs
+                do print ("Failed composite it's a prime :" ++ show x)
+                   testF n xs
             else
-                testF xs 
+                testF n xs 
+
+{- Assignment 5
+    Testing the Fermat's primality check for multiple k on Carmichael numbers.
+
+    testF 1 $ take 1000 carmichael
+    
+
+
+    testF 2 $ take 1000 carmichael
+    testF 4 $ take 1000 carmichael
+    testF 8 $ take 1000 carmichael
+    testF 16 $ take 1000 carmichael
+    testF 32 $ take 1000 carmichael
+
+
+-}
+testMR :: Int -> [Integer] -> IO ()
+testMR n [] = print "Test primeF done!"
+testMR n (x:xs) = do
+            result <- primeMR n x
+            if result 
+            then
+                do print ("Failed composite it's a prime :" ++ show x)
+                   testMR n xs
+            else
+                testMR n xs 
+
+
+
+
+
+{-
+  Assignment 8 
+
+  Step one ;
+
+  Generate two random primes
+
+
+-}
+
+getRandomprime :: IO Integer
+getRandomprime = do
+                    rn <- randomRIO (2^127, 2^129)  :: IO Integer
+                    returnNextPrime rn
+
+returnNextPrime :: Integer -> IO Integer
+returnNextPrime n = do 
+                     result <-  primeMR 4 (n+1)
+                     if result
+                     then
+                       return (n+1) 
+                     else
+                       returnNextPrime (n+1)
+
+
+
