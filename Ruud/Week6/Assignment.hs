@@ -116,5 +116,7 @@ prime_test_F'' x n = ((exM x (n-1) n == 1)) && prime_test_F'' (x-1) n
 {- Exercise 3 -}
 
 composites :: [Integer]
-composites = [ x | x <- [4..], not(isPrime x)]
+composites = composites' [4..]
+composites' (n:ns) = n : composites' 
+   (filter (\ m -> head (factors m) /= m) ns)
     

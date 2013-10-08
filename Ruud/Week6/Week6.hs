@@ -76,7 +76,7 @@ primeF _ 2 = return True
 primeF 0 _ = return True
 primeF k n = do
    a <- randomRIO (1, n-1) :: IO Integer
-   if (exM a (n-1) n /= 1) && isPrime a
+   if (exM a (n-1) n /= 1)
       then return False 
       else primeF (k-1) n
 
