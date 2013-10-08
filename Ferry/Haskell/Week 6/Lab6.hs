@@ -19,12 +19,10 @@ carmichael = [ (6*k+1)*(12*k+1)*(18*k+1) |
 -- X^31 = X ( X^15 . X^15 ) = X ( X ( X^7 . X^7 ) . X ( X^7 . X^7 )) ........   
 -}
 expMy :: Integer -> Integer -> Integer -> Integer
-expMy _ 0 _ = 1
+expMy _ 0 _ = 1     
 expMy x y n | even y = multM z z n 
             | otherwise = multM x (multM z z n) n
               where  z  = expMy x (y `div` 2) n
-
-
 
 --    Compare performance test
 
@@ -40,7 +38,8 @@ test p ((x,y,w):fs) =  do
                         test p fs 
 
 testVminimal = [(m1,m2,m3),(m3,m4,m5),(m5,m6,m7),(m6,m7,m8)]
-testVfull = [(m1,m2,m3),(m3,m4,m5),(m5,m6,m7),(m6,m7,m8),(m7,m8,m9),(m9,m10,m11),(m11,m12,m13)]
+
+testVfull = [(m1,m2,m3),(m3,m4,m5),(m5,m6,m7),(m6,m7,m8),(m7,m8,m9),(m9,m10,m11),(m11,m12,m13),(m13,m14,m14)]
 
 {-- Test results 
     Test run :
@@ -69,26 +68,37 @@ testVfull = [(m1,m2,m3),(m3,m4,m5),(m5,m6,m7),(m6,m7,m8),(m7,m8,m9),(m9,m10,m11)
     Will probably not terminate during this course.
 -}
 
-factorsMy :: Integer -> [Integer]
-factorsMy n = let 
-   ps = takeWhile (\m -> m^2 <= n) primes
- in factorsMy' n ps where 
-   factorsMy' 1 _  = []
-   factorsMy' n [] = [n]
-   factorsMy' n (p:ps) 
-    | n `mod` p == 0 = p: [n]
-    | otherwise      =    factorsMy' n ps
 
-
-composites :: [Integer]
-composites = composites' [4..]
-composites' (n:ns) = n : composites' (filter (\ m -> length (take 2 (factors m)) == 2) ns)
-
+{-
+  After the hint in the assignment 2, I wrote composites 
+  based on the sieve vwhich really is a very bad solution. 
+  (but works).
 
 --primes = sieve [2..]
 --sieve (n:ns) = n : sieve (filter (\ m -> rem m n /= 0) ns)
 
+
+  After a rethink I came op with c2
+
+  compared:
+
+  timeIt (print (show (take 10000 composites)))
+  ...
+  CPU time: 1097.97s
+
+  timeIt (print (show (take 10000 c2)))
+  ...
+  CPU time:   0.20s
+
+-}
+composites :: [Integer]
+composites = composites' [4..]
+composites' (n:ns) = n : composites' (filter (\ m -> length (take 2 (factors m)) == 2) ns)
+
+c2 = [ i | i <- [4..], head (factors i) /= i ]
+
 testF :: [Integer] -> IO ()
+testF [] = print "Test done!"
 testF (x:xs) = do
             result <- prime_test_F x
             if result 
