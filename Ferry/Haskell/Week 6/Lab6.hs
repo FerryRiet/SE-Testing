@@ -170,6 +170,29 @@ testMR n (x:xs) = do
             else
                 testMR n xs 
 
+{-
+Assignment 8
+
+You can use the Miller-Rabin primality check to discover some large Mersenne
+primes. The recipe: take a large prime p, and use the Miller-Rabin algorithm
+to check whether 2p 􀀀 1 is also prime. Find information about Mersenne primes
+on internet and check whether the numbers that you found are genuine Mersenne
+primes. Report on your ndings.
+-}
+
+mersenne :: Integer -> IO ()
+mersenne n = do
+              --p <- n -- 
+              res <- primeMR 4 (2^n - 1)  
+              nextP <- returnNextPrime n
+              if res
+                then
+                  do print ("Mersenne " ++ show n)
+                     mersenne (nextP)
+                else
+                  mersenne (nextP)
+
+
 
 
 
