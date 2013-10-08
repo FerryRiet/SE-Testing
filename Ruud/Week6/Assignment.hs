@@ -107,11 +107,15 @@ p ==> q = (not p) || q
 
 -- test all numbers, instead of a random number
 prime_test_F' :: Integer -> Bool
+prime_test_F' 1 = False
 prime_test_F' n = prime_test_F'' (n-1) n
      
 prime_test_F'' :: Integer -> Integer -> Bool
-prime_test_F'' 0 n = True
+prime_test_F'' 0 n = True --error ("test returns true :: " ++ (show n))
 prime_test_F'' x n = ((exM x (n-1) n == 1)) && prime_test_F'' (x-1) n
+
+-- test this function for correctness
+t1 = all (\x -> prime_test_F' x == isPrime x) [2..1000]
 
 {- Exercise 3 -}
 
@@ -119,4 +123,47 @@ composites :: [Integer]
 composites = composites' [4..]
 composites' (n:ns) = n : composites' 
    (filter (\ m -> head (factors m) /= m) ns)
-    
+
+{- Exercise 4 -}
+
+-- test using earlier created test function which checks all numbers
+testF [] = print "All done."
+testF (k:ks) = do
+        isP <- primeF 10 k 
+        if isP then do
+                print (show k ++ " is a prime!")
+                testF ks
+        else do
+                --print (show k ++ " is a not prime!")
+                testF ks
+        --where isP = prime_test_F' k
+
+testF1 = testF (take 10000 composites)
+
+{- The first one that may fail is 4, because:
+        exM 3 3 4 == 3
+        exM 2 3 4 == 0
+        exM 1 3 4 == 1  <- fails the primeF test!!!
+
+   Running the test multiple times, the function returns many false positives.
+   When upgrading 'the attempts x' in "primeF x y" to 10, there are less false positives.
+   For example:
+        "1105 is a prime!"
+        "6601 is a prime!"
+        "8911 is a prime!"
+        "10585 is a prime!"
+        "All done."
+        (533.48 secs, 87417424332 bytes)
+
+        Check with:
+        any isPrime [1105,6601,8911,10585]
+        False
+
+   - Side note: 
+   I used the last line (and commented the first line with isP)
+        'where isP = prime_test_F' k'
+   to test all possible numbers, and test them to 1. 
+   This should be equal to isPrime.
+-}
+
+{- Exercise 5 -}
