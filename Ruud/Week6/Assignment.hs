@@ -132,7 +132,7 @@ testF [] = print "All done."
 testF (k:ks) = do
         isP <- primeF 10 k 
         if isP then do
-                print (show k ++ " is a prime!")
+                print (show k ++ " is marked as prime!")
                 testF ks
         else do
                 --print (show k ++ " is a not prime!")
@@ -208,7 +208,7 @@ testCarmichael = testF carmichael
         "9624742921 is a prime!"
         "11346205609 is a prime!"
         "13079177569 is a prime!"
-        etc... slightly different number
+        etc... slightly different numbers
 
 
 
@@ -217,5 +217,162 @@ testCarmichael = testF carmichael
         map prime_test_F' carmichael
         [False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,Interrupted.
         
-        Todo, "Read the entry on Carmichael numbers on Wikipedia to explain what you find." 
+        After reading the carmichael on wikipedia, I still not produced the same list.
+-}
+
+{- Exercise 6 -}
+testMR :: Int -> [Integer] -> IO ()
+testMR _ [] = print "All done."
+testMR n (k:ks) = do
+        isP <- primeMR n k 
+        if isP then do
+                print (show k ++ " is marked as prime!")
+                testMR n ks
+        else do
+                --print (show k ++ " is a not prime!")
+                testMR n ks
+
+{-
+    Test result on composites with 1 attempt
+        *Assignment> testMR 1 (take 100 composites)
+        "4 is marked as prime!"
+        "49 is marked as prime!"
+        "85 is marked as prime!"
+        "All done."
+        (0.09 secs, 7763404 bytes)
+        *Assignment> testMR 1 (take 100 composites)
+        "9 is marked as prime!"
+        "All done."
+        (0.00 secs, 515484 bytes)
+        *Assignment> testMR 1 (take 100 composites)
+        "15 is marked as prime!"
+        "39 is marked as prime!"
+        "55 is marked as prime!"
+        "All done."
+
+    Test results on composites with 10 attempts:
+        *Assignment> testMR 10 (take 100 composites)
+        "All done."
+        (0.02 secs, 1102924 bytes)
+    etc...  (same results over and over again)
+
+    Ok, now the tests with Carmichael numbers, using 1 attempt:
+        *Assignment> testMR 1 (take 100 carmichael)
+        "1299963601 is marked as prime!"
+        "21515221081 is marked as prime!"
+        "1396066334401 is marked as prime!"
+        "3719466204049 is marked as prime!"
+        "8544361005001 is marked as prime!"
+        "67858397221969 is marked as prime!"
+        "73103085605161 is marked as prime!"
+        "All done."
+        (0.12 secs, 12451072 bytes)
+        *Assignment> testMR 1 (take 100 carmichael)
+        "118901521 is marked as prime!"
+        "1299963601 is marked as prime!"
+        "1544001719761 is marked as prime!"
+        "9332984447209 is marked as prime!"
+        "39782913594409 is marked as prime!"
+        "48336382727569 is marked as prime!"
+        "70895483772049 is marked as prime!"
+        "91968282854641 is marked as prime!"
+        "195809339861929 is marked as prime!"
+        "All done."
+        (0.11 secs, 12461572 bytes)
+
+     Same test with Carmichael numbers, but now using 10 attempt:
+        *Assignment> testMR 10 (take 100 carmichael)
+        "All done."
+        (0.12 secs, 14014064 bytes)
+        *Assignment> testMR 10 (take 100 carmichael)
+        "All done."
+        (0.17 secs, 13495536 bytes)
+    etc...  (same results over and over again)
+-}
+
+{- Exercise 7 -}
+
+-- list of mersene numbers (extracted from my defined list earlier)
+mersenne = map head testNumbers
+
+-- get a (big) prime number
+firstPrimeAfter n = head [ x | x <- [n..], isPrime x]
+
+
+testMersenne n = do
+        b <- primeMR 10 m
+        if b
+                then print "prime!";
+                else print "no prime!";
+        where p = firstPrimeAfter n
+              m = ((2^p) - 1)
+
+{- results:
+        *Assignment> testMersenne 100
+        "no prime!"
+        (0.02 secs, 546476 bytes)
+        *Assignment> testMersenne 101
+        "no prime!"
+        (0.02 secs, 0 bytes)
+        *Assignment> testMersenne 1000
+        "no prime!"
+        (0.05 secs, 1636772 bytes)
+        *Assignment> testMersenne 10000
+        "no prime!"
+        (6.07 secs, 89611920 bytes)
+        *Assignment> testMersenne 10000
+        ________________________________
+
+        *Assignment> testMersenne 5
+        "prime!"
+        (0.02 secs, 0 bytes)
+        *Assignment> testMersenne 6
+        "prime!"
+        (0.02 secs, 516164 bytes)
+        *Assignment> testMersenne 7
+        "prime!"
+        (0.00 secs, 553140 bytes)
+        *Assignment> testMersenne 8
+        "no prime!"
+        (0.02 secs, 551464 bytes)
+        *Assignment> testMersenne 9
+        "no prime!"
+        (0.00 secs, 550552 bytes)
+
+        *Assignment> testMersenne 50000
+        "no prime!"
+        (186.59 secs, 2083636836 bytes)
+-}
+
+testMersennes n 0 = print "All done."
+testMersennes n i = do
+        b <- primeMR 10 m
+        when (b) $ putStrLn (show m ++ ",")
+        testMersennes (p+1) (i-1)
+        where p = firstPrimeAfter n
+              m = ((2^p) - 1)
+
+{- Test results of testMersennes (first prime, number of next tries on testMersennes)
+
+        *Assignment> testMersennes 1 100
+        3,
+        7,
+        31,
+        127,
+        8191,
+        131071,
+        524287,
+        2147483647,
+        2305843009213693951,
+        618970019642690137449562111,
+        162259276829213363391578010288127,
+        170141183460469231731687303715884105727,
+        6864797660130609714981900799081393217269435300143305409394463459185543183397656052122559640661454554977296311391480858037121987999716643812574028291115057151,
+        "All done."
+        (0.34 secs, 52462300 bytes)
+
+        *Assignment> take 13 mersenne
+        [3,7,31,127,8191,131071,524287,2147483647,2305843009213693951,618970019642690137449562111,162259276829213363391578010288127,170141183460469231731687303715884105727,6864797660130609714981900799081393217269435300143305409394463459185543183397656052122559640661454554977296311391480858037121987999716643812574028291115057151]
+
+        These are the same numbers.
 -}
