@@ -37,6 +37,8 @@ expMy x y n | even y = multM z z n
             | otherwise = multM x (multM z z n) n
               where  z  = expMy x (y `div` 2) n
 
+-- expMy had two refactor steps 
+
 --    Compare performance test
 
 -- Modified test framework from Week 2 code
