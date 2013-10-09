@@ -1,3 +1,16 @@
+----   PASOP 
+----   PASOP 
+----   PASOP 
+----   PASOP     The composites functie bevat een structureele fout 
+----   PASOP     niet copieren.
+----   PASOP     GR,
+----   PASOP     Ferry
+----   PASOP 
+----   PASOP 
+----   PASOP 
+
+
+
 module Lab where
 
 import Data.List
