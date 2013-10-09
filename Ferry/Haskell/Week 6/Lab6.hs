@@ -269,7 +269,7 @@ mersenne n = do
 
 getRandomprime :: IO Integer
 getRandomprime = do
-                    rn <- randomRIO (2^128, 2^129-1)  :: IO Integer
+                    rn <- randomRIO (2*128, 2^129-1)  :: IO Integer
                     returnNextPrime rn
 
 returnNextPrime :: Integer -> IO Integer
