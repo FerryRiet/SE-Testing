@@ -114,12 +114,51 @@ minimalize' n ((r,c):rcs)  | uniqueSol n' = n'
                            | otherwise    = minimalize' n  rcs
   where n' = eraseN n (r,c)
 
-
 isMinimal :: Node -> Bool
 isMinimal n = if sud2grid (fst n) == sud2grid (fst (minimalize' n xs)) 
               then True
               else False
               where xs = filledPositions (fst n)
+
+getRandomSudokus :: Int -> Int -> IO [Node]
+getRandomSudokus 0 _ = return [] 
+getRandomSudokus n level = do s <- genRandomSudoku
+                              --d <- level 
+                              l <- genProblem s level
+                              l2 <- getRandomSudokus (n-1) level
+                              return (l:l2)
+
+-- Test drivers
+
+testSudoku :: Int -> (Node  -> Bool) -> [Node] -> IO ()
+testSudoku n _ []  = print (show n ++ " Sudoku tests passed")
+testSudoku n p (f:fs) = 
+                      if p f
+                      then do print ("Pass on:")
+                              showNode f
+                              testSudoku n p fs
+                      else do showNode f
+                              error ("test failed.")
+
+testSudokus :: Int -> Int -> (Node -> Bool) -> IO ()
+testSudokus n d prop = do 
+                      fs1 <- getRandomSudokus n d
+                      testSudoku n prop fs1 
+
+{-
+  testSudodus will generate Sudokus of given difficulty and runs a test on it. Sudokus with a lower 
+  difficulty level of 320 are possible not ninimal, level below 300 are not minimal  
+-}
+
+tSud0 = testSudokus 3 40 (\ x ->  consistent (fst x) )                      
+tSud1 = testSudokus 3 40 (\ x ->  consistent (fst (solveNs [x]!! 0)) )                      
+tSud1' = testSudokus 3 100 (\ x ->  consistent (fst x) && consistent (fst (solveNs [x]!! 0)) && (isMinimal x == False) )                      
+tSud2 = testSudokus 3 40 (\ x ->  length (filledPositions (fst (solveNs [x]!! 0))) == 81 )                      
+tSud3 = testSudokus 3 40 (\ x ->  isMinimal x == False )                      
+tSud4 = testSudokus 1 300 isMinimal
+--tSud5 = testSudokus 1 40 (\ x -> show x )                      
+
+
 
 --main :: IO ()
 main = do [r] <- rsolveNs [emptyN]
@@ -131,7 +170,7 @@ main = do [r] <- rsolveNs [emptyN]
 --pain :: IO ()
 pain = do r <- genRandomSudoku 
           showNode r
-          s  <- genProblem r 400
+          s  <- genProblem r 350
           showNode s
           --showConstraints $ snd s
           if isMinimal s 
@@ -139,7 +178,6 @@ pain = do r <- genRandomSudoku
           else print "Not-minimal"
           print ("Class of Sudoku: " ++ show (classifyConstraints (snd s)))
           solveShowNs [s]
-
 
 
 

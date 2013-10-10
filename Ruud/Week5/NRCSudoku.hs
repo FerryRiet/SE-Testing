@@ -4,7 +4,8 @@ where
 
 import Data.List
 import Week4 
-import Week5
+--import Week5
+import Week5modified
 import RandomSudoku 
 
 nrcExample :: Grid

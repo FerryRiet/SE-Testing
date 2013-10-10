@@ -7,7 +7,8 @@
 module RandomSudoku where 
 
 import Data.List
-import Week5
+--import Week5
+import Week5modified
 import System.Random
 
 emptyN :: Node
@@ -106,11 +107,10 @@ genProblem n = do ys <- randomize xs
                   return (minimalize n ys)
    where xs = filledPositions (fst n)
 
---main :: IO ()
+main :: IO [()]
 main = do [r] <- rsolveNs [emptyN]
           showNode r
           s  <- genProblem r
           showNode s
           solveShowNs [s]
 
-             

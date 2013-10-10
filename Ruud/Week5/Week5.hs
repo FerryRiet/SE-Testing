@@ -207,42 +207,38 @@ positions, values :: [Int]
 positions = [1..9]
 values    = [1..9] 
 
-blocks, innerblocks :: [[Int]]
-blocks      = [[1..3],[4..6],[7..9]]
-innerblocks = [[2..4],[6..8]]
+blocks :: [[Int]]
+blocks = [[1..3],[4..6],[7..9]]
 
 showDgt :: Value -> String
 showDgt 0 = " "
 showDgt d = show d
 
-showRow :: Char -> [Value] -> IO()
-showRow c [a1,a2,a3,a4,a5,a6,a7,a8,a9] = 
+showRow :: [Value] -> IO()
+showRow [a1,a2,a3,a4,a5,a6,a7,a8,a9] = 
  do  putChar '|'         ; putChar ' '
-     putStr (showDgt a1) ; putChar ' '; putChar c; putChar ' '
+     putStr (showDgt a1) ; putChar ' '
      putStr (showDgt a2) ; putChar ' '
      putStr (showDgt a3) ; putChar ' '
      putChar '|'         ; putChar ' '
-     putStr (showDgt a4) ; putChar c; putChar ' '
-     putStr (showDgt a5) ; putChar ' '; putChar c
+     putStr (showDgt a4) ; putChar ' '
+     putStr (showDgt a5) ; putChar ' '
      putStr (showDgt a6) ; putChar ' '
      putChar '|'         ; putChar ' '
      putStr (showDgt a7) ; putChar ' '
-     putStr (showDgt a8) ; putChar ' '; putChar c; putChar ' '
+     putStr (showDgt a8) ; putChar ' '
      putStr (showDgt a9) ; putChar ' '
      putChar '|'         ; putChar '\n'
 
 showGrid :: Grid -> IO()
 showGrid [as,bs,cs,ds,es,fs,gs,hs,is] =
- do putStrLn (headerRow)
-    showRow ' ' as; putStrLn (middleRow); showRow '|' bs; showRow '|' cs 
-    putStrLn (headerRow)
-    showRow '|' ds; putStrLn (middleRow); showRow ' ' es; putStrLn (middleRow); showRow '|' fs 
-    putStrLn (headerRow)
-    showRow '|' gs; showRow '|' hs; putStrLn (middleRow); showRow ' ' is
-    putStrLn (headerRow)
- where headerRow = "+---------+---------+---------+"
-       middleRow = "|   +-----|--+   +--|-----+   |"
-
+ do putStrLn ("+-------+-------+-------+")
+    showRow as; showRow bs; showRow cs
+    putStrLn ("+-------+-------+-------+")
+    showRow ds; showRow es; showRow fs
+    putStrLn ("+-------+-------+-------+")
+    showRow gs; showRow hs; showRow is
+    putStrLn ("+-------+-------+-------+")
 
 type Sudoku = (Row,Column) -> Value
 
@@ -260,18 +256,11 @@ showSudoku :: Sudoku -> IO()
 showSudoku = showGrid . sud2grid
 
 bl :: Int -> [Int]
-bl x = concat $ filter (elem x) blocks
-
-innerbl :: Int -> [Int]
-innerbl x = concat $ filter (elem x) innerblocks 
+bl x = concat $ filter (elem x) blocks 
 
 subGrid :: Sudoku -> (Row,Column) -> [Value]
 subGrid s (r,c) = 
   [ s (r',c') | r' <- bl r, c' <- bl c ]
-
-innersubGrid :: Sudoku -> (Row,Column) -> [Value]
-innersubGrid s (r,c) = 
-  [ s (r',c') | r' <- innerbl r, c' <- innerbl c ]
 
 freeInSeq :: [Value] -> [Value]
 freeInSeq seq = values \\ seq 
@@ -287,15 +276,11 @@ freeInColumn s c =
 freeInSubgrid :: Sudoku -> (Row,Column) -> [Value]
 freeInSubgrid s (r,c) = freeInSeq (subGrid s (r,c))
 
-freeInInnerSubgrid :: Sudoku -> (Row,Column) -> [Value]
-freeInInnerSubgrid s (r,c) = freeInSeq (innersubGrid s (r,c))
-
 freeAtPos :: Sudoku -> (Row,Column) -> [Value]
 freeAtPos s (r,c) = 
   (freeInRow s r) 
    `intersect` (freeInColumn s c) 
-   `intersect` (freeInSubgrid s (r,c))
-   `intersect` (freeInInnerSubgrid s (r,c)) 
+   `intersect` (freeInSubgrid s (r,c)) 
 
 injective :: Eq a => [a] -> Bool
 injective xs = nub xs == xs
@@ -312,10 +297,6 @@ subgridInjective :: Sudoku -> (Row,Column) -> Bool
 subgridInjective s (r,c) = injective vs where 
    vs = filter (/= 0) (subGrid s (r,c))
 
-innersubgridInjective :: Sudoku -> (Row,Column) -> Bool
-innersubgridInjective s (r,c) = injective vs where 
-   vs = filter (/= 0) (innersubGrid s (r,c))
-
 consistent :: Sudoku -> Bool
 consistent s = and $
                [ rowInjective s r |  r <- positions ]
@@ -324,9 +305,6 @@ consistent s = and $
                 ++
                [ subgridInjective s (r,c) | 
                     r <- [1,4,7], c <- [1,4,7]]
-                ++
-               [ innersubgridInjective s (r,c) | 
-                    r <- [2,6], c <- [2,6]]
 
 extend :: Sudoku -> (Row,Column,Value) -> Sudoku
 extend s (r,c,v) (i,j) | (i,j) == (r,c) = v
@@ -363,9 +341,7 @@ prune (r,c,v) ((x,y,zs):rest)
   | otherwise = (x,y,zs) : prune (r,c,v) rest
 
 sameblock :: (Row,Column) -> (Row,Column) -> Bool
-sameblock (r,c) (x,y) = (bl r == bl x && bl c == bl y)
-                        ||
-                        (innerbl r == innerbl x && innerbl c == innerbl y)
+sameblock (r,c) (x,y) = bl r == bl x && bl c == bl y 
 
 initNode :: Grid -> [Node]
 initNode gr = let s = grid2sud gr in 
