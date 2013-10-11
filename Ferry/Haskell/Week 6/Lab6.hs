@@ -103,14 +103,29 @@ testVfull = [(m1,m2,m3),(m3,m4,m5),(m5,m6,m7),(m6,m7,m8),(m7,m8,m9),(m9,m10,m11)
 
   timeIt (print (show (take 10000 c2)))
   ...
-  CPU time:   0.20s
+  CPU time:   0.92s
 
+  timeIt (print (show (take 10000 comp)))
+  ...
+  CPU time:   1.83s
+
+  Note: between tests a reload of the haskell envirement.
 -}
 composites :: [Integer]
 composites = composites' [4..]
 composites' (n:ns) = n : composites' (filter (\ m -> length (take 2 (factors m)) == 2) ns)
 
 c2 = [ i | i <- [4..], head (factors i) /= i ]
+
+-- A nice recursive version (having non recursive iterations would be nice)
+
+comp :: [Integer]
+comp = comp' [2..] primes
+comp' :: [Integer] -> [Integer] -> [Integer]
+comp' (i:is) (p:ps) |  i == p = comp' is ps
+                    | otherwise = i : comp' is (p:ps)
+
+
 
 {-Assignment 4
 
