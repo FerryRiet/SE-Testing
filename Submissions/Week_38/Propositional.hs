@@ -4,10 +4,12 @@ where
 
 import Week2
 
-satisfiable :: Form -> Bool
-satisfiable f = any (\ v -> eval v f) (allVals f)
+-- VVZ: already in Week2
+-- satisfiable :: Form -> Bool
+-- satisfiable f = any (\ v -> eval v f) (allVals f)
 
 contradiction :: Form -> Bool
+-- VVZ: correct, but could be just 'contradiction = not . satisfiable'
 contradiction f = not $ satisfiable f
 
 tautology :: Form -> Bool

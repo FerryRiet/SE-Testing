@@ -96,6 +96,8 @@ tfs = testForms 1000 (\x -> equiv (x) (cnf x))
 
 ```
 
+VVZ: so basically you only test if the CNF-ified result is equivalent to the original. Where do you test that the result of CNF-ication is actually in CNF?
+
 ### Final test run
 
 After the run of tfs we got:
