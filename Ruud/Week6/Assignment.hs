@@ -134,6 +134,17 @@ t1 = all (\x -> prime_test_F' x == isPrime x) [2..1000]
         (51.90 secs, 7000607460 bytes)
 -}
 
+{- Exercise 3 -}
+
+composites :: [Integer]
+composites = composites' [4..]
+composites' (n:ns) = n : composites' 
+   (filter (\ m -> head (factors m) /= m) ns)
+
+infiniteElem1 :: (Ord a) => a -> [a] -> Bool
+infiniteElem1 x list = (== x) $ head $ dropWhile (< x) list
+
+
 findCarmichael n = filter (carmichealTest) [2..n]
 
 carmichealTest x = infiniteElem1 x composites &&
@@ -155,28 +166,6 @@ carmichealTest x = infiniteElem1 x composites &&
 
    -- Note: Its not very efficient... but it works :-)
 -}
-
-
-
-{- Exercise 3 -}
-
-composites :: [Integer]
-composites = composites' [4..]
-composites' (n:ns) = n : composites' 
-   (filter (\ m -> head (factors m) /= m) ns)
-
-infiniteElem1 :: (Ord a) => a -> [a] -> Bool
-infiniteElem1 x list = (== x) $ head $ dropWhile (< x) list
-
---primeF' :: Int -> Integer -> IO Bool
---primeF' _ 2 = return True
---primeF' 0 _ = return False
---primeF' k n = do
---   a <- randomRIO (1, n-1) :: IO Integer
---   if (infiniteElem1 n composites && exM a n n == a)
---   --if (exM a (n-1) n /= 1) 
---      then return True 
---      else primeF' (k-1) n
 
 {- Exercise 4 -}
 
