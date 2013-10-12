@@ -4,12 +4,15 @@ where
 
 import Week6
 import Lab6
-import Control.Monad
-import Text.Printf
+
 import Control.Exception
+import Control.Monad
+
+import System.Random
 import System.CPUTime
 import System.TimeIt
 
+import Text.Printf
 
 {- Exercise 1:
     Created exM 
@@ -111,11 +114,22 @@ prime_test_F' 1 = False
 prime_test_F' n = prime_test_F'' (n-1) n
      
 prime_test_F'' :: Integer -> Integer -> Bool
-prime_test_F'' 0 n = True --error ("test returns true :: " ++ (show n))
-prime_test_F'' x n = ((exM x (n-1) n == 1)) && prime_test_F'' (x-1) n
+prime_test_F'' 0 n = True
+prime_test_F'' x n = if res
+                     then False
+                     else prime_test_F'' (x-1) n
+        where res  = exM x (n-1) n /= 1
 
 -- test this function for correctness
 t1 = all (\x -> prime_test_F' x == isPrime x) [2..1000]
+
+{- Result:
+        *Assignment> t1
+        True
+        *Assignment> all (\x -> isPrime x == prime_test_F' x) [2..5000]
+        True
+        (51.90 secs, 7000607460 bytes)
+-}
 
 {- Exercise 3 -}
 
@@ -123,6 +137,19 @@ composites :: [Integer]
 composites = composites' [4..]
 composites' (n:ns) = n : composites' 
    (filter (\ m -> head (factors m) /= m) ns)
+
+infiniteElem1 :: (Ord a) => a -> [a] -> Bool
+infiniteElem1 x list = (== x) $ head $ dropWhile (< x) list
+
+--primeF' :: Int -> Integer -> IO Bool
+--primeF' _ 2 = return True
+--primeF' 0 _ = return False
+--primeF' k n = do
+--   a <- randomRIO (1, n-1) :: IO Integer
+--   if (infiniteElem1 n composites && exM a n n == a)
+--   --if (exM a (n-1) n /= 1) 
+--      then return True 
+--      else primeF' (k-1) n
 
 {- Exercise 4 -}
 

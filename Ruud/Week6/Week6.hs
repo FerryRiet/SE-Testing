@@ -80,15 +80,6 @@ primeF k n = do
       then return False 
       else primeF (k-1) n
 
-primeF' :: Int -> Integer -> IO Bool
-primeF' _ 2 = return True
-primeF' 0 _ = return True
-primeF' k n = do
-   a <- randomRIO (1, n-1) :: IO Integer
-   if (exM a (n-1) n /= mod 1 n) 
-      then return False 
-      else primeF' (k-1) n
-
 decomp :: Integer -> (Integer,Integer)
 decomp n = decomp' (0,n) where
   decomp' = until (odd.snd) (\ (m,n) -> (m+1,div n 2))
