@@ -115,10 +115,13 @@ prime_test_F' n = prime_test_F'' (n-1) n
      
 prime_test_F'' :: Integer -> Integer -> Bool
 prime_test_F'' 0 n = True
-prime_test_F'' x n = if res
+prime_test_F'' x n = if prime && res
                      then False
                      else prime_test_F'' (x-1) n
-        where res  = exM x (n-1) n /= 1
+        --where res  = exM x (n-1) n /= 1
+        -- new according to wikipedia, this is the 'right test'
+        where prime = isPrime x 
+              res   = exM x n n /= x 
 
 -- test this function for correctness
 t1 = all (\x -> prime_test_F' x == isPrime x) [2..1000]
@@ -130,6 +133,30 @@ t1 = all (\x -> prime_test_F' x == isPrime x) [2..1000]
         True
         (51.90 secs, 7000607460 bytes)
 -}
+
+findCarmichael n = filter (carmichealTest) [2..n]
+
+carmichealTest x = infiniteElem1 x composites &&
+                    prime_test_F' x /= isPrime x
+{- after modifying the prime_testF'' function: 
+      CHANGED: 
+         where res  = exM x (n-1) n /= 1
+      TO:
+         where prime = isPrime x 
+         res   = exM x n n /= x 
+
+   Results:
+        *Assignment> findCarmichael 1000
+        [561]
+        (1.39 secs, 207949228 bytes)
+        *Assignment> findCarmichael 10000
+        [561,1105,1729,2465,2821,6601,8911]
+        (117.42 secs, 18728092776 bytes)
+
+   -- Note: Its not very efficient... but it works :-)
+-}
+
+
 
 {- Exercise 3 -}
 
