@@ -115,6 +115,8 @@ composites :: [Integer]
 composites = composites' [4..]
 composites' (n:ns) = n : composites' (filter (\ m -> head (factors m) /= m ) ns)
 
+
+-- nothing beats a clean iteration hidden in a list comprehension 
 c2 = [ i | i <- [4..], head (factors i) /= i ]
 
 -- A nice recursive version (having non recursive iterations would be nice)
@@ -127,8 +129,6 @@ comp' (i:is) (p:ps) |  i == p = comp' is ps
 
 {-
   Testing: Composites
-
-
 -}
 
 -- I use comp as my reference implemantation
@@ -137,7 +137,7 @@ tc1 = (take 100000 composites) == (take 100000 comp)
 tc2 = (take 100000 c2) == (take 100000 comp)
 
 -- Human test
--- Read and analyse output
+-- Read and analyse the output
 tc3 = (take 200 composites)
 tc4 = (take 200 c2)
 
