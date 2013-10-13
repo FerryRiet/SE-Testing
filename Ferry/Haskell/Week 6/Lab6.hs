@@ -192,16 +192,22 @@ testF n (x:xs) = do
 {- Assignment 5
     Testing the Fermat's primality check for multiple k on Carmichael numbers.
 
-    testF 1 $ take 1000 carmichael
-    
-
-
+    testF 1 $ take 10 carmichael
     testF 2 $ take 1000 carmichael
     testF 4 $ take 1000 carmichael
     testF 8 $ take 1000 carmichael
     testF 16 $ take 1000 carmichael
     testF 32 $ take 1000 carmichael
+    testF 64 $ take 1000 carmichael
+    testF 128 $ take 1000 carmichael
+ 
+    Until 128 tests we had over 50 % failures
 
+    This test is total unreliable finaly
+
+    testF 655366 $ take 1000 carmichael 
+
+    gave 0 faults (but no garanty) 
 
 -}
 testMR :: Int -> [Integer] -> IO ()
@@ -222,13 +228,16 @@ testMR n (x:xs) = do
 
     testMR 1 $ take 1000 carmichael
     
+    10 % failiures
 
     testMR 2 $ take 1000 carmichael
-    testMR 4 $ take 1000 carmichael
-    testMR 8 $ take 1000 carmichael
-    testMR 16 $ take 1000 carmichael
-    testMR 32 $ take 1000 carmichael
 
+    1 % failures
+
+    testMR 4 $ take 1000 carmichael
+    
+    10 runs not a single failure.   
+  
 -}
 
 {-
@@ -269,6 +278,8 @@ Run
     Next started: 
 
     mersenne (2^128) -- Running from dd 8-10-2013 15:30   
+  
+    Now 14-10-2013 20:30 stoped run. Found until 28te Mersenne prime.  
 
 -}
 
@@ -347,9 +358,9 @@ testrsa (x:xs) = do
     Run RSA test 
     
     testrsa ( take 1000 carmichael )
-    Should fail on the first carmichael number larger or equal to  then pq - 1
+    Should fail on the first carmichael which number larger or equal to  then pq - 1
     
-    shown 50 errors on the first 1000 carmichael numbers
+    Test gave 50 errors on the first 1000 Carmichael numbers
 
 
     Checked with "drop 949 $ take carmichael 
