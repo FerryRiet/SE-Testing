@@ -86,8 +86,8 @@ testVfull = [(m1,m2,m3),(m3,m4,m5),(m5,m6,m7),(m6,m7,m8),(m7,m8,m9),(m9,m10,m11)
 
 {-
   After the hint in the assignment 2, I wrote composites 
-  based on the sieve vwhich really is a very bad solution. 
-  (but works).
+  based on the sieve which really is a very bad solution performance 
+  and memory wise. (but works).
 
 --primes = sieve [2..]
 --sieve (n:ns) = n : sieve (filter (\ m -> rem m n /= 0) ns)
@@ -113,7 +113,7 @@ testVfull = [(m1,m2,m3),(m3,m4,m5),(m5,m6,m7),(m6,m7,m8),(m7,m8,m9),(m9,m10,m11)
 -}
 composites :: [Integer]
 composites = composites' [4..]
-composites' (n:ns) = n : composites' (filter (\ m -> length (take 2 (factors m)) == 2) ns)
+composites' (n:ns) = n : composites' (filter (\ m -> head (factors m) /= m ) ns)
 
 c2 = [ i | i <- [4..], head (factors i) /= i ]
 
@@ -125,6 +125,21 @@ comp' :: [Integer] -> [Integer] -> [Integer]
 comp' (i:is) (p:ps) |  i == p = comp' is ps
                     | otherwise = i : comp' is (p:ps)
 
+{-
+  Testing: Composites
+
+
+-}
+
+-- I use comp as my reference implemantation
+-- Proof of comp see comp  
+tc1 = (take 100000 composites) == (take 100000 comp)
+tc2 = (take 100000 c2) == (take 100000 comp)
+
+-- Human test
+-- Read and analyse output
+tc3 = (take 200 composites)
+tc4 = (take 200 c2)
 
 
 {-Assignment 4
@@ -274,9 +289,9 @@ mersenne n = do
 
   Step one ;
     Generate two random primes
-  Step one ;
+  Step two ;
     generate public key
-  Step one ;
+  Step three ;
     generate private key
 
   Final Play Alice <> Bob 
@@ -284,7 +299,7 @@ mersenne n = do
 
 getRandomprime :: IO Integer
 getRandomprime = do
-                    rn <- randomRIO (2*128, 2^129-1)  :: IO Integer
+                    rn <- randomRIO (2*32, 2^33-1)  :: IO Integer
                     returnNextPrime rn
 
 returnNextPrime :: Integer -> IO Integer
@@ -311,3 +326,35 @@ rsa = do
         print (cm)
         print (pm)
   
+testrsa :: [Integer] -> IO ()
+testrsa [] = print "RSA test ready"
+testrsa (x:xs) = do
+                    p11 <- getRandomprime
+                    q11 <- getRandomprime
+                    let  pkey = rsa_public p11 q11
+                    let  ppri = rsa_private p11 q11
+                    let cm = rsa_encode ppri x
+                    let pm = rsa_decode pkey cm
+                    if x /= pm 
+                      then
+                        do
+                          print "error on RSA"
+                          testrsa xs
+                      else
+                        testrsa xs
+
+{-
+    Run RSA test 
+    
+    testrsa ( take 1000 carmichael )
+    Should fail on the first carmichael number larger or equal to  then pq - 1
+    
+    shown 50 errors on the first 1000 carmichael numbers
+
+
+    Checked with "drop 949 $ take carmichael 
+    and checked 1st em 2ed number by hand 2137831466256605809 and 2152520538381741529
+    Note: Small 32 but primes
+-}
+      
+
