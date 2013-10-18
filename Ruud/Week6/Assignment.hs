@@ -7,6 +7,7 @@ import Lab6
 
 import Control.Exception
 import Control.Monad
+import Data.Bits
 
 import System.Random
 import System.CPUTime
@@ -24,6 +25,26 @@ exM' b e m
     | otherwise = multM b (multM z z m) m
     where z = exM' b (div e 2) m
 
+-- IMPLEMENTED JORRYT HIS FUNCTION TO TEST THE SPEED!!!
+-- Improved exM function using right to left binary method
+exMJorryt :: Integer -> Integer -> Integer -> Integer
+exMJorryt base expo modulus  = rightToLeftBinary 1 base expo modulus
+            where rightToLeftBinary :: Integer -> Integer -> Integer -> Integer -> Integer
+                  rightToLeftBinary result base expo modulus
+                    | (expo > 0) = rightToLeftBinary newResult newBase newExponent modulus -- recurse until expo is 0
+                    | otherwise = result
+                    where newResult = if ((.&.) expo 1 == 1) -- Check for odd number
+                                      then mod (result * base) modulus -- Intermediate result
+                                      else result
+                          newExponent = shiftR expo 1 -- Bit shift (dev by 2 basically)
+                          newBase = mod (base * base) modulus
+
+--from: http://rosettacode.org/wiki/Modular_exponentiation#Haskell
+powm :: Integer -> Integer -> Integer -> Integer -> Integer
+powm b 0 m r = r
+powm b e m r | e `mod` 2 == 1 = powm (b * b `mod` m) (e `div` 2) m (r * b `mod` m)
+powm b e m r = powm (b * b `mod` m) (e `div` 2) m r
+
 -- simple test to check the logic
 test1 = all test1' [0..10000]
 test1' x = (x^33) `mod` 5 == (x^32 `mod` 5) * (x `mod` 5)
@@ -33,29 +54,99 @@ test2' x = (x^33) `mod` 5 == (rem ((x^16 `mod` 5) * (x^16 `mod` 5)) 5) * (x `mod
 {-- Measure functions: Results below -}
 testNumbersStr = ["m1,m2,m3","m2,m3,m4","m3,m4,m5","m4,m5,m6","m5,m6,m7","m6,m7,m8","m7,m8,m9","m8,m9,m10","m9,m10,m11","m10,m11,m12","m11,m12,m13","m12,m13,m14","m13,m14,m15","m14,m15,m16","m15,m16,m17","m16,m17,m18","m17,m18,m19","m18,m19,m20","m19,m20,m21","m20,m21,m22","m21,m22,m23","m22,m23,m24","m23,m24,m25"]
 testNumbers    = [[m1,m2,m3],[m2,m3,m4],[m3,m4,m5],[m4,m5,m6],[m5,m6,m7],[m6,m7,m8],[m7,m8,m9],[m8,m9,m10],[m9,m10,m11],[m10,m11,m12],[m11,m12,m13],[m12,m13,m14],[m13,m14,m15],[m14,m15,m16],[m15,m16,m17],[m16,m17,m18],[m17,m18,m19],[m18,m19,m20],[m19,m20,m21],[m20,m21,m22],[m21,m22,m23],[m22,m23,m24],[m23,m24,m25]]
+--testNumbersStr' = ["m1","m2","m3","m4","m5","m6","m7","m8","m9","m10","m11","m12","m13","m14","m15","m16","m17","m18","m19","m20","m21","m22","m23","m24","m25","m26"]
+--testNumbers'    = [m1,m2,m3,m4,m5,m6,m7,m8,m9,m10,m11,m12,m13,m14,m15,m16,m17,m18,m19,m20,m21,m22,m23,m24,m25,m26]
+testNumbersStr' = ["m16","m17","m18","m19","m20","m21","m22","m23","m24","m25","m26"]
+testNumbers'    = [m16,m17,m18,m19,m20,m21,m22,m23,m24,m25,m26]
+
+genRandomList :: IO (String, [Integer])
+genRandomList = genRandomList' testNumbersStr' testNumbers'
+    
+
+genRandomList' :: [String] -> [Integer] -> IO (String, [Integer])
+genRandomList' xs ys = do
+        i <- getRandomInt ((length ys)-1)
+        j <- getRandomInt ((length ys)-1)
+        k <- getRandomInt ((length ys)-1)
+        return ((xs !! i ++ "," ++ xs !! j ++ "," ++ xs !! k),(ys !! i):((ys !! j):[(ys !! k)]))
+            
+
+
+-- getRandomInt creates a random integer between zero and n
+getRandomInt :: Int -> IO Int
+getRandomInt n = getStdRandom (randomR (0,n))
 
 measureExMs :: IO ()
 measureExMs = measureExMs' $ zip testNumbersStr testNumbers
 
+--measureExMsRand = do
+--    randList <- genRandomList
+--    measureExMs' randList
+
+measureExMRand :: Integer -> IO ()
+measureExMRand 0 = putStrLn "All done."
+measureExMRand n = do 
+        randomList <- genRandomList
+        testCorrectNess (fst randomList) (snd randomList)
+        measureExM (fst randomList) (snd randomList)
+        measureExMRand (n-1)
+
 measureExMs' :: [(String,[Integer])] -> IO ()
 measureExMs' []     = putStrLn "All done."
 measureExMs' (x:xs) = do 
+        testCorrectNess (fst x) (snd x)
         measureExM (fst x) (snd x)
         measureExMs' xs
+
+--measureExM' :: IO ()
+--measureExM' = do
+--        -- Execute new function + measure the time it took to compute
+--         startBinaryMethod <- getCPUTime
+--         let binaryMethodResult = exM m23 m24 m25
+--         endBinaryMethod <- getCPUTime
+--         let computingTimeBinaryMethod = endBinaryMethod - startBinaryMethod
+--         --printf "Computation time ExM (Original): %0.10f sec\n" ((fromIntegral computingTimeOriginal) / 10^12 :: Double)
+--         printf "Computation time ExM (Binary Method): %0.10f sec\n\n" ((fromIntegral computingTimeBinaryMethod) / 10^12 :: Double)
+--         print binaryMethodResult
+
+testCorrectNess :: String -> [Integer] -> IO ()
+testCorrectNess s (b:e:m:xs) = do
+    --testExM <- exM b e m
+    --testExM' <- exM' b e m
+    --testExMJorryt <- exMJorryt b e m
+    --testPow <- powm b e m 1
+    if (testExM /= testExM' || testExM /= testExMJorryt || testExM /= testPow)
+    then error "Error test failed!" 
+    else putStrLn "Test passed"
+    where 
+        testExM = exM b e m
+        testExM' = exM' b e m
+        testExMJorryt = exMJorryt b e m
+        testPow = powm b e m 1
 
 -- returns the execution time of the functions
 measureExM :: String -> [Integer] -> IO ()
 measureExM s (b:e:m:xs) = do
     printf "Test '%s'" s
-    test1 <- timeToString  ((exM b e m) `seq` return ())
-    putStr (" exM:" ++ test1)
-    test2 <- timeToString  ((exM' b e m) `seq` return ())
-    putStr (" |exM':" ++ test2)
-    if b <= m6 then do
-        test3 <- timeToString ((expM b e m) `seq` return ())
-        putStrLn (" | expM:" ++ test3)
-    else 
-        putStrLn " | expM': Skipped."
+    --test1 <- timeToString  ((exM b e m) `seq` return ())
+    --putStr (" exM:" ++ test1)
+    testExM' <- timeToString  ((exM' b e m) `seq` return ())
+    putStr (" |exM':" ++ testExM')
+    testExMJorryt <- timeToString  ((exMJorryt b e m) `seq` return ())
+    putStr (" |exMJorryt:" ++ testExMJorryt)
+    testPow <- timeToString  ((powm b e m 1) `seq` return ())
+    putStrLn (" |pow:" ++ testPow)
+    --if ((read testExM' :: Float) == (read testExMJorryt :: Float)) 
+    --then putStrLn " | no winner!"
+    --else 
+    --    if ((read testExM' :: Float) < (read testExMJorryt :: Float)) 
+    --    then putStrLn " | testExM' wins"
+    --    else putStrLn " | testExMJorryt wins"
+    --if b <= m6 then do
+    --    test3 <- timeToString ((expM b e m) `seq` return ())
+    --    putStrLn (" | expM:" ++ test3)
+    --else 
+    --    putStrLn " | expM': Skipped."
 
 {- borrowed this function from haskell.org and modified it.
    Link: http://www.haskell.org/haskellwiki/Timing_computations -}
@@ -65,7 +156,7 @@ timeToString a = do
     v <- a
     end   <- getCPUTime
     let diff = (fromIntegral (end - start)) / (10^12)
-    return $ printf "%0.3f sec" (diff :: Double)
+    return $ printf "%0.5f" (diff :: Double)
 
 {- Exercise 2
     Result of measureExMs:

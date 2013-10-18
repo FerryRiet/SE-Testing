@@ -7,6 +7,7 @@ import Lab6
 
 import Control.Exception
 import Control.Monad
+import Data.Bits
 
 import System.Random
 import System.CPUTime
@@ -50,7 +51,7 @@ measureExM s (b:e:m:xs) = do
     test1 <- timeToString  ((exM b e m) `seq` return ())
     putStr (" exM:" ++ test1)
     test2 <- timeToString  ((exM' b e m) `seq` return ())
-    putStr (" |exM':" ++ test2)
+    putStr (" |exM':" ++ test2)    
     if b <= m6 then do
         test3 <- timeToString ((expM b e m) `seq` return ())
         putStrLn (" | expM:" ++ test3)
@@ -345,8 +346,8 @@ firstPrimeAfter n = head [ x | x <- [n..], isPrime x]
 testMersenne n = do
         b <- primeMR 10 m
         if b
-                then print "prime!";
-                else print "no prime!";
+                then print (show p ++ " = prime!");
+                else print (show p ++ " = no prime!");
         where p = firstPrimeAfter n
               m = ((2^p) - 1)
 
@@ -448,8 +449,8 @@ returnNextPrime n = do
                      else
                        returnNextPrime (n+1)
 
-rsa :: IO ()
-rsa = do
+rsa :: Integer -> IO ()
+rsa x = do
         p11 <- getRandomprime
         q11 <- getRandomprime
         let  pkey = rsa_public p11 q11
@@ -458,7 +459,7 @@ rsa = do
         print q11
         print (pkey)
         print (ppri)        
-        let cm = rsa_encode ppri 11
+        let cm = rsa_encode ppri x
         let pm = rsa_decode pkey cm
         print (cm)
         print (pm)
