@@ -47,7 +47,7 @@ mergeSrtA :: Ord a => [a] -> [a]
 mergeSrtA = assert1 permutationProp 
           $ assert1 sortedOutputProp 
             mergeSrt
-
+-- VVZ: aren't these two conditions equivalent?
 
 {- 
     Exercise 2 
